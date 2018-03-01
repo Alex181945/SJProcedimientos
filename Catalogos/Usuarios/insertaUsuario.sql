@@ -82,6 +82,73 @@
 
 			END IF;
 
+			/*Valida campos obligatotios como no nulos o vacios*/
+			IF cUsuario = "" OR cUsuario = NULL 
+
+				THEN 
+					SET lError = 1; 
+					SET cError = "El usuario no contiene valor";
+					LEAVE insertaUsuario;
+
+			END IF;
+
+			IF cContrasena = "" OR cContrasena = NULL 
+
+				THEN 
+					SET lError = 1; 
+					SET cError = "La contraseña no contiene valor";
+					LEAVE insertaUsuario;
+
+			END IF;
+
+			IF cNombre = "" OR cNombre = NULL 
+
+				THEN 
+					SET lError = 1; 
+					SET cError = "El nombre del usuario no contiene valor";
+					LEAVE insertaUsuario;
+					
+
+			END IF;
+
+			IF cPaterno = "" OR cPaterno = NULL 
+
+				THEN 
+					SET lError = 1; 
+					SET cError = "El apellido paterno del usuario no contiene valor";
+					LEAVE insertaUsuario;
+
+			END IF;
+
+			IF lHonorarios = NULL 
+
+				THEN 
+					SET lError = 1; 
+					SET cError = "No se indico el tipo de contrato del usuario";
+					LEAVE insertaUsuario;
+
+			END IF;
+
+			IF iPerfil = 0 OR iPerfil = NULL 
+
+				THEN 
+					SET lError = 1; 
+					SET cError = "No se indico un perfil para el usuario";
+					LEAVE insertaUsuario;
+
+			END IF;
+
+			/*Validacion de las claves foraneas*/
+			IF NOT EXISTS(SELECT * FROM ctPerfil WHERE ctPerfil.iPerfil  = iPerfil
+												AND ctPerfil.lActivo = 1 )
+
+			THEN
+				SET lError = 1; 
+				SET cError = "El perfil seleccionado no existe o no esta activo";
+				LEAVE insertaUsuario;
+
+			END IF;
+
 			/*Insercion del usuario*/
 			INSERT INTO ctUsuario (	ctUsuario.cUsuario, 
 									ctUsuario.cContrasena, 
