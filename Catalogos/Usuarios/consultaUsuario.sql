@@ -20,7 +20,7 @@
  									OUT lError TINYINT(1), 
  									OUT cSqlState VARCHAR(50), 
  									OUT cError VARCHAR(200))
- 	BEGIN
+ 	consultaUsuario:BEGIN
 
 		/*Manejo de Errores*/ 
 		DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -56,36 +56,44 @@
 			/*Crea una tabla temporal con la estructura de la tabla
 			 *especificada despues del LIKE
 			 */
+			DROP TEMPORARY TABLE IF EXISTS tt_ctUsuario;
+
 			CREATE TEMPORARY TABLE tt_ctUsuario LIKE ctUsuario;
 
 			/*Comprueba si existe el usuario*/
-			/*IF EXISTS(SELECT * FROM ctUsuario WHERE ctUsuario.cUsuario = cUsuario AND ctUsuario.lActivo = 1)*/
+			IF EXISTS(SELECT * FROM ctUsuario WHERE ctUsuario.cUsuario = cUsuario)
 
 				/*Si existe copia toda la informacion del usuario a la tabla temporal*/
-				/*THEN INSERT INTO tt_ctUsuario SELECT * FROM ctUsuario WHERE ctUsuario.cUsuario = cUsuario;*/
+				THEN INSERT INTO tt_ctUsuario SELECT * FROM ctUsuario WHERE ctUsuario.cUsuario = cUsuario;
 
 				/*Si no manda error de que no lo encontro*/
-				/*ELSE SET lError = 1; SET cError = "Usuario no activo";*/
-
-			/*END IF;*/
-
-			/*IF (SELECT * FROM tt_ctUsuario WHERE tt_ctUsuario.cContrasena = cPassword)*/
-
-				/*THEN SELECT * FROM tt_ctUsuario;*/
-
-				/*ELSE SET lError = 1; SET cError = "Usuario y/o Contraseña erroneas";*/
-
-			/*END IF;*/
-
-			/*DROP TEMPORARY TABLE tt_ctUsuario;*/
-
-			IF EXISTS(SELECT * FROM ctUsuario WHERE ctUsuario.cUsuario = cUsuario AND ctUsuario.cContrasena = cPassword AND ctUsuario.lActivo = 1)
-
-				THEN SELECT * FROM ctUsuario WHERE ctUsuario.cUsuario = cUsuario AND ctUsuario.cContrasena = cPassword AND ctUsuario.lActivo = 1;
-
-				ELSE SET lError = 1; SET cError = "No existen registros activos";
+				ELSE 
+					SET lError = 1; 
+					SET cError = "Usuario no existe";
+					LEAVE consultaUsuario;
 
 			END IF;
+
+			/*Valida que el usuario este activo*/
+			IF NOT EXISTS(SELECT * FROM tt_ctUsuario WHERE tt_ctUsuario.lActivo = 1)
+
+				THEN 
+					SET lError = 1; 
+					SET cError = "Usuario no activo";
+					LEAVE consultaUsuario;
+
+			END IF;
+
+			IF NOT EXISTS(SELECT * FROM tt_ctUsuario WHERE tt_ctUsuario.cContrasena = cPassword)
+
+				THEN 
+					SET lError = 1; 
+					SET cError = "Usuario y/o Contraseña erroneas";
+					LEAVE consultaUsuario;
+
+			END IF;
+
+			SELECT * FROM tt_ctUsuario;
 
 		COMMIT;
 
