@@ -1,20 +1,22 @@
 /**
  * 
  * Autor: Alejandro Estrada
- * Fecha: 13/02/2018
- * Descripcion: Procedimiento que inserta usuarios
+ * Fecha: 05/03/2018
+ * Descripcion: Procedimiento que actualiza el registro
+ * de un usuario
  *  
  * Modificaciones:
  * <Quien modifico:> <Cuando modifico:> <Donde modifico:>
  * Ejemplo: Alejandro Estrada 09/09/2017 In-15 Fn-19 
+ *
+ * Nota: 0 es falso, 1 es verdadero
  * 
- * Notas: 0 es igual a falso, 1 es igual a verdadero
  */
- 
+
  /*Delimitador de bloque*/
  DELIMITER //
 
- CREATE PROCEDURE insertaUsuario(	IN cUsuario    VARCHAR(50),
+ CREATE PROCEDURE actualizaUsuario(	IN cUsuario  VARCHAR(20),
  									IN cContrasena VARCHAR(30),
  									IN cNombre     VARCHAR(150),
  									IN cPaterno    VARCHAR(150),
@@ -24,14 +26,12 @@
  									IN cCorreo     VARCHAR(100),
  									IN lHonorarios TINYINT(1),
  									IN iPerfil     INT(11),
+ 									IN lActivo     TINYINT(1),
  									IN cUsuarioR   VARCHAR(50),
- 									OUT lError     TINYINT(1), 
- 									OUT cSqlState  VARCHAR(50), 
- 									OUT cError     VARCHAR(200)
- 								)
-
- 	/*Nombre del Procedimiento*/
- 	insertaUsuario:BEGIN
+ 									OUT lError TINYINT(1), 
+ 									OUT cSqlState VARCHAR(50), 
+ 									OUT cError VARCHAR(200))
+ 	actualizaUsuario:BEGIN
 
 		/*Manejo de Errores*/ 
 		DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -40,7 +40,7 @@
   			@e1 = RETURNED_SQLSTATE, @e2 = MESSAGE_TEXT;
 			SET lError    = 1;
 			SET cSqlState = CONCAT("SqlState: ", @e1);
-			SET cError    = CONCAT("Exepxcion: ", @e2);
+			SET cError    = CONCAT("Exepcion: ", @e2);
 			ROLLBACK;
 		END; 
 
@@ -54,32 +54,34 @@
 			SET cError    = CONCAT("Advertencia: ", @w2);
 			ROLLBACK;
 		END;	 
-		
+
 		START TRANSACTION;
+
+			/*Procedimiento*/
 
 			/*Variables para control de errores inicializadas*/
 			SET lError    = 0;
 			SET cSqlState = "";
 			SET cError    = "";
-
-			/*Valida el usuario que crea el registro*/
+			
+			/*Se valida que el usuarioR exista y este activo*/
 			IF NOT EXISTS(SELECT * FROM ctUsuario WHERE ctUsuario.cUsuario = cUsuarioR
 													AND ctUsuario.lActivo  = 1)
 
 				THEN
 					SET lError = 1; 
 					SET cError = "El usuario del sistema no existe o no esta activo";
-					LEAVE insertaUsuario;
+					LEAVE borraUsuario;
 
 			END IF;
 
-			/*Verifica que el usuario a crear no exista con anterioridad*/
-			IF EXISTS(SELECT * FROM ctUsuario WHERE ctUsuario.cUsuario = cUsuario)
+			/*Valida que el usuario exista*/
+			IF NOT EXISTS(SELECT * FROM ctUsuario WHERE ctUsuario.cUsuario = cUsuario)
 
 				THEN 
 					SET lError = 1; 
-					SET cError = "El usuario ya existe";
-					LEAVE insertaUsuario;
+					SET cError = "Usuario no existe";
+					LEAVE borraUsuario;
 
 			END IF;
 
@@ -159,33 +161,22 @@
 
 			END IF;
 
-			/*Insercion del usuario*/
-			INSERT INTO ctUsuario (	ctUsuario.cUsuario, 
-									ctUsuario.cContrasena, 
-									ctUsuario.cNombre, 
-									ctUsuario.cPaterno, 
-									ctUsuario.cMaterno, 
-									ctUsuario.cPuesto, 
-									ctUsuario.cExtension, 
-									ctUsuario.cCorreo, 
-									ctUsuario.lHonorarios, 
-									ctUsuario.iPerfil, 
-									ctUsuario.lActivo, 
-									ctUsuario.dtCreado, 
-									ctUsuario.cUsuarioR) 
-						VALUES	(	cUsuario,
-									cContrasena,
-									cNombre,
-									cPaterno,
-									cMaterno,
-									cPuesto,
-									cExtension,
-									cCorreo,
-									lHonorarios,
-									iPerfil,
-									1,
-									NOW(),
-									cUsuarioR);
+			/*Realiza la actualizacion*/
+			UPDATE ctUsuario
+				SET ctUsuario.cUsuario     = cUsuario
+					ctUsuario.cContrasena  = cContrasena
+					ctUsuario.cNombre      = cNombre
+					ctUsuario.cPaterno     = cPaterno
+					ctUsuario.cMaterno     = cMaterno
+					ctUsuario.cPuesto      = cPuesto
+					ctUsuario.cExtension   = cExtension
+					ctUsuario.cCorreo      = cCorreo
+					ctUsuario.lHonorarios  = lHonorarios
+					ctUsuario.iPerfil      = iPerfil
+					ctUsuario.lActivo      = lActivo
+					ctUsuario.dtModificado = NOW()
+					ctUsuario.cUsuarioR    = cUsuarioR
+				WHERE ctUsuario.cUsuario   = cUsuario;
 
 		COMMIT;
 

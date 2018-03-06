@@ -1,25 +1,26 @@
 /**
  * 
  * Autor: Alejandro Estrada
- * Fecha: 23/11/2017
- * Descripcion: Procedimiento que valida usuario
+ * Fecha: 05/03/2018
+ * Descripcion: Procedimiento que trae todos los usuarios
  *  
  * Modificaciones:
  * <Quien modifico:> <Cuando modifico:> <Donde modifico:>
  * Ejemplo: Alejandro Estrada 09/09/2017 In-15 Fn-19 
  *
- * Nota: 0 es falso, 1 es verdadero
+ * Nota: 0 es falso, 1 es verdadero solo aplica para los campos logicos
+ * Nota: 0 es para inactivos, 1 para activos, 2 para ambos
  * 
  */
- 
- /*Delimitador de bloque*/
+
+  /*Delimitador de bloque*/
  DELIMITER //
 
- CREATE PROCEDURE consultaUsuario(	IN cUsuario  VARCHAR(20),
- 									OUT lError TINYINT(1), 
- 									OUT cSqlState VARCHAR(50), 
- 									OUT cError VARCHAR(200))
- 	consultaUsuario:BEGIN
+ CREATE PROCEDURE consultaUsuarios(	IN iTipoConsulta INT(3),
+ 									OUT lError       TINYINT(1), 
+ 									OUT cSqlState    VARCHAR(50), 
+ 									OUT cError       VARCHAR(200))
+ 	consultaUsuarios:BEGIN
 
 		/*Manejo de Errores*/ 
 		DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -59,30 +60,16 @@
 
 			CREATE TEMPORARY TABLE tt_ctUsuario LIKE ctUsuario;
 
-			/*Comprueba si existe el usuario*/
-			IF EXISTS(SELECT * FROM ctUsuario WHERE ctUsuario.cUsuario = cUsuario)
+			/*Casos para el tipo de consulta*/
+			CASE iTipoConsulta
 
-				/*Si existe copia toda la informacion del usuario a la tabla temporal*/
-				THEN INSERT INTO tt_ctUsuario SELECT * FROM ctUsuario WHERE ctUsuario.cUsuario = cUsuario;
+			    WHEN 0 THEN INSERT INTO tt_ctUsuario SELECT * FROM ctUsuario WHERE ctUsuario.lActivo = 0;
+			    WHEN 1 THEN INSERT INTO tt_ctUsuario SELECT * FROM ctUsuario WHERE ctUsuario.lActivo = 1;
+			    WHEN 2 THEN INSERT INTO tt_ctUsuario SELECT * FROM ctUsuario;
 
-				/*Si no manda error de que no lo encontro*/
-				ELSE 
-					SET lError = 1; 
-					SET cError = "Usuario no existe";
-					LEAVE consultaUsuario;
+			END CASE
 
-			END IF;
-
-			/*Valida que el usuario este activo*/
-			IF NOT EXISTS(SELECT * FROM tt_ctUsuario WHERE tt_ctUsuario.lActivo = 1)
-
-				THEN 
-					SET lError = 1; 
-					SET cError = "Usuario no activo";
-					LEAVE consultaUsuario;
-
-			END IF;
-
+			/*Resultado de las consultas anteriores*/
 			SELECT * FROM tt_ctUsuario;
 
 		COMMIT;

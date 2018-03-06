@@ -1,7 +1,7 @@
 /**
  * 
  * Autor: Alejandro Estrada
- * Fecha: 23/11/2017
+ * Fecha: 05/03/2018
  * Descripcion: Procedimiento que valida usuario
  *  
  * Modificaciones:
@@ -15,11 +15,12 @@
  /*Delimitador de bloque*/
  DELIMITER //
 
- CREATE PROCEDURE consultaUsuario(	IN cUsuario  VARCHAR(20),
+ CREATE PROCEDURE validaUsuario(	IN cUsuario  VARCHAR(20),
+ 									IN cPassword VARCHAR(20),
  									OUT lError TINYINT(1), 
  									OUT cSqlState VARCHAR(50), 
  									OUT cError VARCHAR(200))
- 	consultaUsuario:BEGIN
+ 	validaUsuario:BEGIN
 
 		/*Manejo de Errores*/ 
 		DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -79,6 +80,15 @@
 				THEN 
 					SET lError = 1; 
 					SET cError = "Usuario no activo";
+					LEAVE consultaUsuario;
+
+			END IF;
+
+			IF NOT EXISTS(SELECT * FROM tt_ctUsuario WHERE tt_ctUsuario.cContrasena = cPassword)
+
+				THEN 
+					SET lError = 1; 
+					SET cError = "Usuario y/o Contraseña erroneas";
 					LEAVE consultaUsuario;
 
 			END IF;
