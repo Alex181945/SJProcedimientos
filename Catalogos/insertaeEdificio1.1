@@ -14,7 +14,6 @@
  DELIMITER //
 CREATE PROCEDURE insertaEdificio(
 
- 									IN iIDEdificio INTEGER ,
 									IN cEdificio VARCHAR(150) ,
 									IN iPisos INTEGER,
 									IN cPisoEsp VARCHAR(100),
@@ -24,9 +23,6 @@ CREATE PROCEDURE insertaEdificio(
 									IN cMunicipio VARCHAR(150),
 									IN cEstado VARCHAR(150) ,
 									IN cCP VARCHAR(10),
-									IN lActivo BOOL,
-									IN dtCreado DATETIME ,
-									IN dtModificado DATETIME,
 									IN cUsuario VARCHAR(50) ,
  									OUT lError TINYINT(1), 
  									OUT cSqlState VARCHAR(50), 
@@ -128,7 +124,7 @@ CREATE PROCEDURE insertaEdificio(
 					LEAVE ctEdificios;
 			END IF;
 
-			IF cCP = NULL
+			IF cCP = NULL OR cCP = ""
 
 				THEN 
 					SET lError = 1;
@@ -138,7 +134,7 @@ CREATE PROCEDURE insertaEdificio(
 
 
 
-			INSERT INTO ctEdificios (ctEdificios.iIDEdificio, 
+			INSERT INTO ctEdificios(
 									ctEdificios.cEdificio, 
 									ctEdificios.iPisos, 
 									ctEdificios.cPisoEsp, 
@@ -148,11 +144,8 @@ CREATE PROCEDURE insertaEdificio(
 									ctEdificios.cMunicipio, 
 									ctEdificios.cEstado, 
 									ctEdificios.cCP, 
-									ctEdificios.lActivo, 
-									ctEdificios.dtCreado, 
-									ctEdificios.dtModificado,
 									ctEdificios.cUsuario )
-						VALUES	(	iIDEdificio
+						VALUES	(
 									cEdificio
 									iPisos
 									cPisoEsp
@@ -162,9 +155,6 @@ CREATE PROCEDURE insertaEdificio(
 									cMunicipio
 									cEstado
 									cCP
-									1,
-									NOW(),
-									NOW(),
 									cUsuario);
 
 		COMMIT;
