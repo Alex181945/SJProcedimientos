@@ -87,8 +87,8 @@
 
 			END IF;
 
-			/*Realiza el borrado logico que es una llamada al procedimiento actualizaUsuario*/
-			CALL actualizaUsuario();
+			/*Realiza el borrado logico solo se actualiza el campo lActivo*/
+			UPDATE ctUsuario SET ctUsuario.lActivo = 0 WHERE ctUsuario.cUsuario = cUsuario;
 
 		COMMIT;
 
