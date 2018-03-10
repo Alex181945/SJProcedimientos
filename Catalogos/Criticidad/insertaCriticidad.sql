@@ -1,25 +1,24 @@
 /**
- * insertacriticidad
+ * insertaCriticidad
  * Autor: Bogar Chavez
- * Fecha: 06/03/2018
+ * Fecha: 09/03/2018
  * Descripcion: 
  *  
  * Modificaciones:
  * <Quien modifico:> <Cuando modifico:> <Donde modifico:>
- * Ejemplo: Bogar Chavez 06/09/2017 In-06 Fn-
+ * Ejemplo: Bogar Chavez 09/09/2017 In-06 Fn-
  *
  * Nota: 0 es falso, 1 es verdadero
  * 
  */
   DELIMITER //
-CREATE PROCEDURE insertaEdificio(
-								IN 	cCriticidad VARCHAR(150) NOT NULL,
-								IN 	cUsuario VARCHAR(50) NOT NULL,
+CREATE PROCEDURE insertaCriticidad( IN 	cCriticidad VARCHAR(150) NOT NULL,
+									IN 	cUsuario VARCHAR(50) NOT NULL,
  									OUT lError TINYINT(1), 
  									OUT cSqlState VARCHAR(50), 
  									OUT cError VARCHAR(200))
 
- 	insertaEdificio:BEGIN
+ 	insertaCriticidad:BEGIN
 
  	/*Manejo de Errores*/ 
 		DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -60,7 +59,7 @@ CREATE PROCEDURE insertaEdificio(
 
 				THEN 
 					SET lError = 1;
-					SET cError = "La cCriticidad no tiene valor";
+					SET cError = "La Criticidad no tiene valor";
 					LEAVE ctCriticidad;
 
 			END IF;
@@ -74,11 +73,14 @@ CREATE PROCEDURE insertaEdificio(
 			END IF;
 
 			INSERT INTO ctCriticidad(
-									ctCriticidad.cCriticidad, 
-									ctCriticidad.cUsuario, 
-									 )
+									ctCriticidad.cCriticidad,
+									ctCriticidad.lActivo,
+									ctCriticidad.dtCreado,
+									ctCriticidad.cUsuario)
 						VALUES	(
-									cCriticidad
+									cCriticidad,
+									1,
+									NOW(),
 									cUsuario);
 
 		COMMIT;
