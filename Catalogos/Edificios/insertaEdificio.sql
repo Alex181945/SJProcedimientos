@@ -12,9 +12,7 @@
  * 
  */
  DELIMITER //
-CREATE PROCEDURE insertaEdificio(
-
-									IN cEdificio VARCHAR(150) ,
+CREATE PROCEDURE insertaEdificio(	IN cEdificio VARCHAR(150) ,
 									IN iPisos INTEGER,
 									IN cPisoEsp VARCHAR(100),
 									IN cCalle VARCHAR(150) ,
@@ -144,17 +142,21 @@ CREATE PROCEDURE insertaEdificio(
 									ctEdificios.cMunicipio, 
 									ctEdificios.cEstado, 
 									ctEdificios.cCP, 
+									ctEdificios.lActivo,
+									ctEdificios.dtCreado,
 									ctEdificios.cUsuario )
 						VALUES	(
-									cEdificio
-									iPisos
-									cPisoEsp
-									cCalle
-									cNumExt
-									cColonia
-									cMunicipio
-									cEstado
-									cCP
+									cEdificio,
+									iPisos,
+									cPisoEsp,
+									cCalle,
+									cNumExt,
+									cColonia,
+									cMunicipio,
+									cEstado,
+									cCP,
+									1,
+									NOW(),
 									cUsuario);
 
 		COMMIT;
