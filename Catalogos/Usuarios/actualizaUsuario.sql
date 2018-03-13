@@ -71,7 +71,7 @@
 				THEN
 					SET lError = 1; 
 					SET cError = "El usuario del sistema no existe o no esta activo";
-					LEAVE borraUsuario;
+					LEAVE actualizaUsuario;
 
 			END IF;
 
@@ -81,7 +81,7 @@
 				THEN 
 					SET lError = 1; 
 					SET cError = "Usuario no existe";
-					LEAVE borraUsuario;
+					LEAVE actualizaUsuario;
 
 			END IF;
 
@@ -91,7 +91,7 @@
 				THEN 
 					SET lError = 1; 
 					SET cError = "El usuario no contiene valor";
-					LEAVE insertaUsuario;
+					LEAVE actualizaUsuario;
 
 			END IF;
 
@@ -100,7 +100,7 @@
 				THEN 
 					SET lError = 1; 
 					SET cError = "La contraseña no contiene valor";
-					LEAVE insertaUsuario;
+					LEAVE actualizaUsuario;
 
 			END IF;
 
@@ -109,7 +109,7 @@
 				THEN 
 					SET lError = 1; 
 					SET cError = "El nombre del usuario no contiene valor";
-					LEAVE insertaUsuario;
+					LEAVE actualizaUsuario;
 					
 
 			END IF;
@@ -119,7 +119,7 @@
 				THEN 
 					SET lError = 1; 
 					SET cError = "El apellido paterno del usuario no contiene valor";
-					LEAVE insertaUsuario;
+					LEAVE actualizaUsuario;
 
 			END IF;
 
@@ -128,7 +128,7 @@
 				THEN 
 					SET lError = 1; 
 					SET cError = "El correo del usuario no contiene valor";
-					LEAVE insertaUsuario;
+					LEAVE actualizaUsuario;
 
 			END IF;
 
@@ -137,7 +137,7 @@
 				THEN 
 					SET lError = 1; 
 					SET cError = "No se indico el tipo de contrato del usuario";
-					LEAVE insertaUsuario;
+					LEAVE actualizaUsuario;
 
 			END IF;
 
@@ -146,7 +146,7 @@
 				THEN 
 					SET lError = 1; 
 					SET cError = "No se indico un perfil para el usuario";
-					LEAVE insertaUsuario;
+					LEAVE actualizaUsuario;
 
 			END IF;
 
@@ -157,24 +157,24 @@
 			THEN
 				SET lError = 1; 
 				SET cError = "El perfil seleccionado no existe o no esta activo";
-				LEAVE insertaUsuario;
+				LEAVE actualizaUsuario;
 
 			END IF;
 
 			/*Realiza la actualizacion*/
 			UPDATE ctUsuario
-				SET ctUsuario.cUsuario     = cUsuario
-					ctUsuario.cContrasena  = cContrasena
-					ctUsuario.cNombre      = cNombre
-					ctUsuario.cPaterno     = cPaterno
-					ctUsuario.cMaterno     = cMaterno
-					ctUsuario.cPuesto      = cPuesto
-					ctUsuario.cExtension   = cExtension
-					ctUsuario.cCorreo      = cCorreo
-					ctUsuario.lHonorarios  = lHonorarios
-					ctUsuario.iPerfil      = iPerfil
-					ctUsuario.lActivo      = lActivo
-					ctUsuario.dtModificado = NOW()
+				SET ctUsuario.cUsuario     = cUsuario,
+					ctUsuario.cContrasena  = cContrasena,
+					ctUsuario.cNombre      = cNombre,
+					ctUsuario.cPaterno     = cPaterno,
+					ctUsuario.cMaterno     = cMaterno,
+					ctUsuario.cPuesto      = cPuesto,
+					ctUsuario.cExtension   = cExtension,
+					ctUsuario.cCorreo      = cCorreo,
+					ctUsuario.lHonorarios  = lHonorarios,
+					ctUsuario.iPerfil      = iPerfil,
+					ctUsuario.lActivo      = lActivo,
+					ctUsuario.dtModificado = NOW(),
 					ctUsuario.cUsuarioR    = cUsuarioR
 				WHERE ctUsuario.cUsuario   = cUsuario;
 
