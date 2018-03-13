@@ -69,7 +69,7 @@
 				THEN 
 					SET lError = 1; 
 					SET cError = "El Edificio no existe";
-					LEAVE borraEdificio;
+					LEAVE actualizaEdificio;
 
 			END IF;
 
@@ -80,7 +80,7 @@
 				THEN 
 					SET lError = 1; 
 					SET cError = "El edificio ya fue borrado con anterioridad";
-					LEAVE borraEdificio;
+					LEAVE actualizaEdificio;
 
 			END IF;
 
@@ -89,7 +89,7 @@
 				THEN 
 					SET lError = 1;
 					SET cError = "El nombre del edficio no tiene valor";
-					LEAVE ctEdificios;
+					LEAVE actualizaEdificio;
 
 			END IF;
 
@@ -98,7 +98,7 @@
 				THEN 
 					SET lError = 1;
 					SET cError = "El dato calle no contine un valor";
-					LEAVE ctEdificios;
+					LEAVE actualizaEdificio;
 			END IF;
 
 			IF cNumExt = "" OR cNumExt = NULL
@@ -106,7 +106,7 @@
 				THEN 
 					SET lError = 1;
 					SET cError = "El valor Numero Ext no tiene valor";
-					LEAVE ctEdificios;
+					LEAVE actualizaEdificio;
 			END IF;
 
 			IF cColonia = "" OR cColonia = NULL
@@ -114,7 +114,7 @@
 				THEN 
 					SET lError = 1;
 					SET cError = "La colonia no tiene valor";
-					LEAVE ctEdificios;
+					LEAVE actualizaEdificio;
 			END IF;
 
 			IF cMunicipio = "" OR cMunicipio = NULL
@@ -122,7 +122,7 @@
 				THEN 
 					SET lError = 1;
 					SET cError = "El Municipio no tiene valor";
-					LEAVE ctEdificios;
+					LEAVE actualizaEdificio;
 			END IF;
 
 			IF cEstado = "" OR cEstado = NULL
@@ -130,7 +130,7 @@
 				THEN 
 					SET lError = 1;
 					SET cError = "El Estado no tiene valor";
-					LEAVE ctEdificios;
+					LEAVE actualizaEdificio;
 			END IF;
 
 			IF cCP = NULL OR cCP = ""
@@ -138,26 +138,25 @@
 				THEN 
 					SET lError = 1;
 					SET cError = "El Codigo Postal no tiene valor";
-					LEAVE ctEdificios;
+					LEAVE actualizaEdificio;
 			END IF;
 
 
 			/*Realiza la actualizacion*/
 			UPDATE ctEdificios
-				SET ctEdificios.cEdificio     = cEdificio
-					ctEdificios.iPisos        = iPisos
-					ctEdificios.cPisoEsp      = cPisoEsp
-					ctEdificios.cCalle        = cCalle
-					ctEdificios.cNumExt       = cNumExt
-					ctEdificios.cColonia      = cColonia
-					ctEdificios.cMunicipio    = cMunicipio
-					ctEdificios.cEstado       = cEstado
-					ctEdificios.cCP           = cCP
-					ctEdificios.lActivo       = lActivo
-					ctEdificios.dtModificado  = NOW()
+				SET ctEdificios.cEdificio     = cEdificio,
+					ctEdificios.iPisos        = iPisos,
+					ctEdificios.cPisoEsp      = cPisoEsp,
+					ctEdificios.cCalle        = cCalle,
+					ctEdificios.cNumExt       = cNumExt,
+					ctEdificios.cColonia      = cColonia,
+					ctEdificios.cMunicipio    = cMunicipio,
+					ctEdificios.cEstado       = cEstado,
+					ctEdificios.cCP           = cCP,
+					ctEdificios.lActivo       = lActivo,
+					ctEdificios.dtModificado  = NOW(),
                     ctEdificios.cUsuario      = cUsuario
-				WHERE ctEdificios.cEdificio   = cEdificio;
-
+				WHERE ctEdificios.iIDEdificio = iIDEdificio;
 		COMMIT;
 
 	END;//
