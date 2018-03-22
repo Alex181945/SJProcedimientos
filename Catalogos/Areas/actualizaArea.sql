@@ -16,11 +16,11 @@
  /*Delimitador de bloque*/
  DELIMITER //
 
- CREATE PROCEDURE actualizaArea(	
+ CREATE PROCEDURE actualizaArea(	IN iIDArea INTEGER(20),
                                     IN  cArea VARCHAR(150),
-                                    IN  lActivo TINYINT(1),,
-                                    IN  cUsuario VARCHAR(50)
- 									OUT lError TINYINT(1), 
+                                    IN  lActivo TINYINT(1),
+                                    IN  cUsuario VARCHAR(50),
+ 									OUT lError TINYINT(1),
  									OUT cSqlState VARCHAR(50), 
  									OUT cError VARCHAR(200))
  	actualizaArea:BEGIN

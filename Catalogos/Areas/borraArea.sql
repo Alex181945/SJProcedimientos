@@ -16,12 +16,12 @@
 
  /*Delimitador de bloque*/
  DELIMITER //
-
- CREATE PROCEDURE borraArea(	IN cArea  VARCHAR(150),
- 								OUT lError TINYINT(1), 
- 								OUT cSqlState VARCHAR(50), 
- 								OUT cError VARCHAR(200))
- 	borraArea:BEGIN
+CREATE PROCEDURE borraArea( IN iIDArea INTEGER(11),
+	 						IN cArea  VARCHAR(150),
+ 							OUT lError TINYINT(1), 
+ 							OUT cSqlState VARCHAR(50), 
+ 							OUT cError VARCHAR(200))	 
+	borraArea:BEGIN
 
 		/*Manejo de Errores*/ 
 		DECLARE EXIT HANDLER FOR SQLEXCEPTION

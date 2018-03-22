@@ -15,10 +15,11 @@
  /*Delimitador de bloque*/
  DELIMITER //
 
- CREATE PROCEDURE consultaArea(	IN cArea  VARCHAR(20),
- 									OUT lError TINYINT(1), 
- 									OUT cSqlState VARCHAR(50), 
- 									OUT cError VARCHAR(200))
+ CREATE PROCEDURE consultaArea(	IN iIDArea INTEGER(20),
+	 							IN cArea  VARCHAR(150),
+ 								OUT lError TINYINT(1), 
+ 								OUT cSqlState VARCHAR(50), 
+ 								OUT cError VARCHAR(200))
  	consultaArea:BEGIN
 
 		/*Manejo de Errores*/ 
@@ -68,7 +69,7 @@
 				/*Si no manda error de que no lo encontro*/
 				ELSE 
 					SET lError = 1; 
-					SET cError = "´Área no existe";
+					SET cError = "Área no existe";
 					LEAVE consultaArea;
 
 			END IF;
