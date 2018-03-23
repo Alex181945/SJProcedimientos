@@ -11,6 +11,9 @@
  * Nota: 0 es falso, 1 es verdadero
  * 
  */
+
+ /*USE SENADO;*/
+
  DELIMITER //
 CREATE PROCEDURE insertaEdificio(	IN cEdificio VARCHAR(150) ,
 									IN iPisos INTEGER,
@@ -66,7 +69,7 @@ CREATE PROCEDURE insertaEdificio(	IN cEdificio VARCHAR(150) ,
 				THEN 
 					SET lError = 1; 
 					SET cError = "El Edificio ya existe";
-					LEAVE ctEdificios;
+					LEAVE insertaEdificio;
 
 			END IF;
 
@@ -78,7 +81,7 @@ CREATE PROCEDURE insertaEdificio(	IN cEdificio VARCHAR(150) ,
 				THEN 
 					SET lError = 1;
 					SET cError = "El nombre del edficio no tiene valor";
-					LEAVE ctEdificios;
+					LEAVE insertaEdificio;
 
 			END IF;
 
@@ -87,7 +90,7 @@ CREATE PROCEDURE insertaEdificio(	IN cEdificio VARCHAR(150) ,
 				THEN 
 					SET lError = 1;
 					SET cError = "El dato calle no contine un valor";
-					LEAVE ctEdificios;
+					LEAVE insertaEdificio;
 			END IF;
 
 			IF cNumExt = "" OR cNumExt = NULL
@@ -95,7 +98,7 @@ CREATE PROCEDURE insertaEdificio(	IN cEdificio VARCHAR(150) ,
 				THEN 
 					SET lError = 1;
 					SET cError = "El valor Numero Ext no tiene valor";
-					LEAVE ctEdificios;
+					LEAVE insertaEdificio;
 			END IF;
 
 			IF cColonia = "" OR cColonia = NULL
@@ -103,7 +106,7 @@ CREATE PROCEDURE insertaEdificio(	IN cEdificio VARCHAR(150) ,
 				THEN 
 					SET lError = 1;
 					SET cError = "La colonia no tiene valor";
-					LEAVE ctEdificios;
+					LEAVE insertaEdificio;
 			END IF;
 
 			IF cMunicipio = "" OR cMunicipio = NULL
@@ -111,7 +114,7 @@ CREATE PROCEDURE insertaEdificio(	IN cEdificio VARCHAR(150) ,
 				THEN 
 					SET lError = 1;
 					SET cError = "El Municipio no tiene valor";
-					LEAVE ctEdificios;
+					LEAVE insertaEdificio;
 			END IF;
 
 			IF cEstado = "" OR cEstado = NULL
@@ -119,7 +122,7 @@ CREATE PROCEDURE insertaEdificio(	IN cEdificio VARCHAR(150) ,
 				THEN 
 					SET lError = 1;
 					SET cError = "El Estado no tiene valor";
-					LEAVE ctEdificios;
+					LEAVE insertaEdificio;
 			END IF;
 
 			IF cCP = NULL OR cCP = ""
@@ -127,7 +130,7 @@ CREATE PROCEDURE insertaEdificio(	IN cEdificio VARCHAR(150) ,
 				THEN 
 					SET lError = 1;
 					SET cError = "El Codigo Postal no tiene valor";
-					LEAVE ctEdificios;
+					LEAVE insertaEdificio;
 			END IF;
 
 
@@ -143,10 +146,9 @@ CREATE PROCEDURE insertaEdificio(	IN cEdificio VARCHAR(150) ,
 									ctEdificios.cEstado, 
 									ctEdificios.cCP, 
 									ctEdificios.lActivo,
-									ctEdificios.dtCreado
-									ctEdificios.cUsuario )
-						VALUES	(
-									cEdificio,
+									ctEdificios.dtCreado,
+									ctEdificios.cUsuario)
+						VALUES	(   cEdificio,
 									iPisos,
 									cPisoEsp,
 									cCalle,

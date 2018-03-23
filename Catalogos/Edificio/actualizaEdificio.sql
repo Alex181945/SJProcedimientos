@@ -13,6 +13,9 @@
  * 
  */
 
+ /*Para pruebas*/
+ USE SENADO;
+
  /*Delimitador de bloque*/
  DELIMITER //
 

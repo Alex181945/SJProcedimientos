@@ -12,6 +12,9 @@
  * 
  */
  
+ /*Para pruebas*/
+ /*USE SENADO;*/
+
  /*Delimitador de bloque*/
  DELIMITER //
 
@@ -79,7 +82,7 @@
 				THEN 
 					SET lError = 1; 
 					SET cError = "Edificio no activo";
-					LEAVE consulta;
+					LEAVE consultaEdificio;
 
 			END IF;
 
