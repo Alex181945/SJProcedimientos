@@ -16,8 +16,8 @@
 /*USE SENADO;*/
 
 DELIMITER //
-CREATE PROCEDURE insertaCriticidad( IN 	cCriticidad VARCHAR(150) NOT NULL,
-									IN 	cUsuario VARCHAR(50) NOT NULL,
+CREATE PROCEDURE insertaCriticidad( IN 	cCriticidad VARCHAR(150),
+									IN 	cUsuario VARCHAR(50),
  									OUT lError TINYINT(1), 
  									OUT cSqlState VARCHAR(50), 
  									OUT cError VARCHAR(200))
