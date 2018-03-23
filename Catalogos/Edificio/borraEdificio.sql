@@ -15,10 +15,11 @@
  /*Delimitador de bloque*/
  DELIMITER //
 
- CREATE PROCEDURE borraEdificio(IN cEdificio  VARCHAR(20),
- 								OUT lError TINYINT(1), 
- 								OUT cSqlState VARCHAR(50), 
- 								OUT cError VARCHAR(200))
+ CREATE PROCEDURE borraEdificio(IN iIDEdificio  INTEGER(11),
+ 								IN cUsuario     VARCHAR(20),
+ 								OUT lError      TINYINT(1), 
+ 								OUT cSqlState   VARCHAR(50), 
+ 								OUT cError      VARCHAR(200))
  	borraEdificio:BEGIN
 
 		/*Manejo de Errores*/ 
@@ -53,7 +54,7 @@
 			SET cError    = "";
 
 			/*Valida que el edificio exista*/
-			IF NOT EXISTS(SELECT * FROM ctEdificio WHERE ctEdificio.cEdificio = cEdificio)
+			IF NOT EXISTS(SELECT * FROM ctEdificio WHERE ctEdificio.iIDEdificio = iIDEdificio)
 
 				THEN 
 					SET lError = 1; 
@@ -63,8 +64,8 @@
 			END IF;
 
 			/*Valida que el edificio no este activo*/
-			IF NOT EXISTS(SELECT * FROM ctEdificio WHERE ctEdificio.cEdificio = cEdificio 
-													AND ctEdificio.lActivo  = 1)
+			IF NOT EXISTS(SELECT * FROM ctEdificio WHERE ctEdificio.iIDEdificio = iIDEdificio 
+													AND  ctEdificio.lActivo     = 1)
 
 				THEN 
 					SET lError = 1; 
@@ -74,7 +75,12 @@
 			END IF;
 
 			/*Realiza el borrado logico que es una llamada al procedimiento actualizaEdificio*/
-			CALL actualizaEdificio();
+			UPDATE ctEdificios
+				SET ctEdificios.lActivo       = 0,
+					ctEdificios.dtModificado  = NOW(),
+                    ctEdificios.cUsuario      = cUsuario
+				WHERE ctEdificios.iIDEdificio = iIDEdificio;
+
 
 		COMMIT;
 

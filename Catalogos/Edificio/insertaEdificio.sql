@@ -12,9 +12,7 @@
  * 
  */
  DELIMITER //
-CREATE PROCEDURE insertaEdificio(
-
-									IN cEdificio VARCHAR(150) ,
+CREATE PROCEDURE insertaEdificio(	IN cEdificio VARCHAR(150) ,
 									IN iPisos INTEGER,
 									IN cPisoEsp VARCHAR(100),
 									IN cCalle VARCHAR(150) ,

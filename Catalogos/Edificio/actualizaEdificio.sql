@@ -16,7 +16,8 @@
  /*Delimitador de bloque*/
  DELIMITER //
 
- CREATE PROCEDURE actualizaEdificio(IN cEdificio VARCHAR(150) ,
+ CREATE PROCEDURE actualizaEdificio(IN iIDEdificio INTEGER(11) ,
+ 									IN cEdificio VARCHAR(150) ,
 									IN iPisos INTEGER,
 									IN cPisoEsp VARCHAR(100),
 									IN cCalle VARCHAR(150) ,
@@ -64,7 +65,7 @@
 			SET cError    = "";
 			
 			/*Valida que el edificio exista*/
-			IF NOT EXISTS(SELECT * FROM ctEdificio WHERE ctEdificio.cEdificio = cEdificio)
+			IF NOT EXISTS(SELECT * FROM ctEdificio WHERE ctEdificio.iIDEdificio = iIDEdificio)
 
 				THEN 
 					SET lError = 1; 
@@ -74,7 +75,7 @@
 			END IF;
 
 			/*Valida que el edificio no este activo*/
-			IF NOT EXISTS(SELECT * FROM ctEdificio WHERE ctEdificio.cEdificio = cEdificio 
+			IF NOT EXISTS(SELECT * FROM ctEdificio WHERE ctEdificio.iIDEdificio = iIDEdificio 
 													AND ctEdificio.lActivo  = 1)
 
 				THEN 
@@ -157,6 +158,7 @@
 					ctEdificios.dtModificado  = NOW(),
                     ctEdificios.cUsuario      = cUsuario
 				WHERE ctEdificios.iIDEdificio = iIDEdificio;
+				
 		COMMIT;
 
 	END;//
