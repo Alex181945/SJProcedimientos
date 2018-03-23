@@ -12,11 +12,13 @@
  * 
  */
  
+ /*Para pruebas*/
+ /*USE SENADO;*/
+
  /*Delimitador de bloque*/
  DELIMITER //
 
- CREATE PROCEDURE consultaArea(	IN iIDArea INTEGER(20),
-	 							IN cArea  VARCHAR(150),
+ CREATE PROCEDURE consultaArea(	IN iIDArea INTEGER(11),
  								OUT lError TINYINT(1), 
  								OUT cSqlState VARCHAR(50), 
  								OUT cError VARCHAR(200))
@@ -61,10 +63,10 @@
 			CREATE TEMPORARY TABLE tt_ctAreas LIKE ctAreas;
 
 			/*Comprueba si existe el area*/
-			IF EXISTS(SELECT * FROM ctAreas WHERE ctAreas.cArea = cArea)
+			IF EXISTS(SELECT * FROM ctAreas WHERE ctAreas.iIDArea = iIDArea)
 
 				/*Si existe copia toda la informacion del area a la tabla temporal*/
-				THEN INSERT INTO tt_ctAreas SELECT * FROM ctAreas WHERE ctAreas.cArea = cArea;
+				THEN INSERT INTO tt_ctAreas SELECT * FROM ctAreas WHERE ctAreas.iIDArea = iIDArea;
 
 				/*Si no manda error de que no lo encontro*/
 				ELSE 

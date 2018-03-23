@@ -11,6 +11,9 @@
  * Nota: 0 es falso, 1 es verdadero
  * 
  */
+
+ /*Para pruebas*/
+/*USE SENADO;*/
  
  /*Delimitador de bloque*/
  DELIMITER //

@@ -14,6 +14,9 @@
  * inhabilita
  */
 
+/*Para pruebas*/
+/*USE SENADO;*/
+
  /*Delimitador de bloque*/
  DELIMITER //
 
@@ -88,7 +91,11 @@
 			END IF;
 
 			/*Realiza el borrado logico solo se actualiza el campo lActivo*/
-			UPDATE ctUsuario SET ctUsuario.lActivo = 0 WHERE ctUsuario.cUsuario = cUsuario;
+			UPDATE ctUsuario SET 
+				ctUsuario.lActivo       = 0,
+				ctUsuario.dtModificado  = NOW(),
+                ctUsuario.cUsuario      = cUsuarioR
+			 WHERE ctUsuario.cUsuario   = cUsuario;
 
 		COMMIT;
 

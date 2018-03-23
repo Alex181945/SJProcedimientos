@@ -13,10 +13,13 @@
  * 
  */
 
+ /*Para pruebas*/
+ /*USE SENADO;*/
+
  /*Delimitador de bloque*/
  DELIMITER //
 
- CREATE PROCEDURE actualizaArea(	IN iIDArea INTEGER(20),
+ CREATE PROCEDURE actualizaArea(	IN iIDArea INTEGER(11),
                                     IN  cArea VARCHAR(150),
                                     IN  lActivo TINYINT(1),
                                     IN  cUsuario VARCHAR(50),
@@ -57,7 +60,7 @@
 			SET cError    = "";
 			
 			/*Verifica que el area no exista con anterioridad*/
-			IF EXISTS(SELECT * FROM ctAreas WHERE ctAreas.cArea = cArea)
+			IF EXISTS(SELECT * FROM ctAreas WHERE ctAreas.iIDArea = iIDArea)
 
 				THEN 
 					SET lError = 1; 
@@ -66,7 +69,7 @@
 
 			END IF;
 
-            IF NOT EXISTS(SELECT * FROM ctAreas WHERE ctAreas.cArea = cArea
+            IF NOT EXISTS(SELECT * FROM ctAreas WHERE ctAreas.iIDArea = iIDArea
 													AND ctAreas.lActivo  = 1)
 
 				THEN

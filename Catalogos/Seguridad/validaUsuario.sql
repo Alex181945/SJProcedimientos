@@ -12,6 +12,9 @@
  * 
  */
  
+ /*Para pruebas*/
+/*USE SENADO;*/
+
  /*Delimitador de bloque*/
  DELIMITER //
 
@@ -70,7 +73,7 @@
 				ELSE 
 					SET lError = 1; 
 					SET cError = "Usuario no existe";
-					LEAVE consultaUsuario;
+					LEAVE validaUsuario;
 
 			END IF;
 
@@ -80,7 +83,7 @@
 				THEN 
 					SET lError = 1; 
 					SET cError = "Usuario no activo";
-					LEAVE consultaUsuario;
+					LEAVE validaUsuario;
 
 			END IF;
 
@@ -89,7 +92,7 @@
 				THEN 
 					SET lError = 1; 
 					SET cError = "Usuario y/o Contraseña erroneas";
-					LEAVE consultaUsuario;
+					LEAVE validaUsuario;
 
 			END IF;
 
