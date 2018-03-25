@@ -1,8 +1,26 @@
+/**
+ * 
+ * Autor: Jennifer Hernandez
+ * Fecha: 25/03/2018
+ * Descripcion: Procedimiento que inserta el registro
+ * de una forma de solicitud
+ *  
+ * Modificaciones:
+ * <Quien modifico:> <Cuando modifico:> <Donde modifico:>
+ * Ejemplo: Alejandro Estrada 09/09/2017 In-15 Fn-19 
+ *
+ * Nota: 0 es falso, 1 es verdadero
+ * 
+ */
+
+ /*Para pruebas*/
+/*USE SENADO;*/
+
 DELIMITER //
 
- CREATE PROCEDURE consultaFormaSolicitud(   IN iIDCreaTicket INTEGER,
-                                            IN cCreaTicket VARCHAR(150),
-                                            IN cUsuario VARCHAR(50),
+ CREATE PROCEDURE insertaFormaSolicitud( 	IN cCreaTicket VARCHAR(150),
+	                                        IN lActivo BOOL,
+	                                        IN cUsuario VARCHAR(50),
                                             OUT lError     TINYINT(1), 
                                             OUT cSqlState  VARCHAR(50), 
                                             OUT cError     VARCHAR(200)
@@ -44,8 +62,8 @@ DELIMITER //
         
 
 			/*Valida el usuario que crea el registro*/
-			IF NOT EXISTS(SELECT * FROM ctformasolicitud WHERE ctformasolicitud.cUsuario = cUsuarioR
-													AND ctformasolicitud.lActivo  = 1)
+			IF NOT EXISTS(SELECT * FROM ctUsuario WHERE ctUsuario.cUsuario = cUsuario
+													AND ctUsuario.lActivo  = 1)
 
 				THEN
 					SET lError = 1; 
@@ -55,15 +73,23 @@ DELIMITER //
 			END IF;
 
 			/*Verifica que el usuario a crear no exista con anterioridad*/
-			IF EXISTS(SELECT * FROM ctformasolicitud WHERE ctformasolicitud.cUsuario = cUsuario)
+			IF EXISTS(SELECT * FROM ctformasolicitud WHERE ctformasolicitud.cCreaTicket = cCreaTicket)
 
 				THEN 
 					SET lError = 1; 
-					SET cError = "El usuario ya existe";
+					SET cError = "La forma de solicitud ya existe";
 					LEAVE insertaFormaSolicitud;
 
 			END IF;
 
+			IF cCreaTicket = "" OR cCreaTicket = NULL 
+
+				THEN 
+					SET lError = 1; 
+					SET cError = "La forma de solicitud no contiene valor";
+					LEAVE insertaFormaSolicitud;
+
+			END IF;
 
 			/*Valida campos obligatotios como no nulos o vacios*/
             IF cUsuario = "" OR cUsuario = NULL 
@@ -74,30 +100,19 @@ DELIMITER //
 					LEAVE insertaFormaSolicitud;
 
 			END IF;
-
-			
-            IF cCreaTicket = "" OR cCreaTicket = NULL 
-
-				THEN 
-					SET lError = 1; 
-					SET cError = "No contiene valor";
-					LEAVE insertaFormaSolicitud;
-
-			END IF;
            
 
-/*Insercion del usuario*/
+			/*Insercion del usuario*/
 			INSERT INTO ctformasolicitud (	ctformasolicitud.cCreaTicket,
                                     ctformasolicitud.lActivo,
                                     ctformasolicitud.cUsuario, 									 
 									ctformasolicitud.dtCreado, 
-									ctUsuario.cUsuarioR) 
+									ctUsuario.cUsuario) 
 						VALUES	(	cCreaTicket,
 									lActivo,
-									cUsuario,
 									1,
 									NOW(),
-									cUsuarioR);
+									cUsuario);
 
 
 	

@@ -1,12 +1,30 @@
+/**
+ * 
+ * Autor: Jennifer Hernandez
+ * Fecha: 25/03/2018
+ * Descripcion: Procedimiento que actualiza el registro
+ * de una forma de solicitud
+ *  
+ * Modificaciones:
+ * <Quien modifico:> <Cuando modifico:> <Donde modifico:>
+ * Ejemplo: Alejandro Estrada 09/09/2017 In-15 Fn-19 
+ *
+ * Nota: 0 es falso, 1 es verdadero
+ * 
+ */
+
+ /*Para pruebas*/
+/*USE SENADO;*/
+
 DELIMITER //
 
- CREATE PROCEDURE actualizaFormaSolicitud(	IN cCreaTicket    VARCHAR(150),
-                                    IN lActivo     TINYINT(1),
-                                    IN cUsuario  VARCHAR(20),
- 									IN cUsuarioR   VARCHAR(50),
- 									OUT lError TINYINT(1), 
- 									OUT cSqlState VARCHAR(50), 
- 									OUT cError VARCHAR(200))
+ CREATE PROCEDURE actualizaFormaSolicitud(	IN iIDCreaTicket  INTEGER(11),
+ 											IN cCreaTicket    VARCHAR(150),
+											IN lActivo        TINYINT(1),
+ 											IN cUsuario       VARCHAR(20),
+		 									OUT lError        TINYINT(1), 
+		 									OUT cSqlState     VARCHAR(50), 
+		 									OUT cError        VARCHAR(200))
  	actualizaFormaSolicitud:BEGIN
      /*Manejo de Errores*/ 
 		DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -39,9 +57,9 @@ DELIMITER //
 			SET cSqlState = "";
 			SET cError    = "";
 	
-	/*Valida el usuario que crea el registro*/
-			IF NOT EXISTS(SELECT * FROM ctformasolicitud WHERE ctformasolicitud.cUsuario = cUsuarioR
-													AND ctformasolicitud.lActivo  = 1)
+			/*Valida el usuario que crea el registro*/
+			IF NOT EXISTS(SELECT * FROM ctUsuario WHERE ctUsuario.cUsuario = cUsuario
+													AND ctUsuario.lActivo  = 1)
 
 				THEN
 					SET lError = 1; 
@@ -50,18 +68,27 @@ DELIMITER //
 
 			END IF;
 
-			/*Verifica que el usuario a crear no exista con anterioridad*/
-			IF EXISTS(SELECT * FROM ctformasolicitud WHERE ctformasolicitud.cUsuario = cUsuario)
+			/*Verifica que la forma de solicitud exista con anterioridad*/
+			IF NOT EXISTS(SELECT * FROM ctformasolicitud WHERE ctformasolicitud.iIDCreaTicket = iIDCreaTicket)
 
 				THEN 
 					SET lError = 1; 
-					SET cError = "El usuario ya existe";
+					SET cError = "Forma de solicitud no encontrada";
 					LEAVE actualizaFormaSolicitud;
 
 			END IF;
 
 
 			/*Valida campos obligatotios como no nulos o vacios*/
+			IF iIDCreaTicket = 0 OR iIDCreaTicket = NULL 
+
+				THEN 
+					SET lError = 1; 
+					SET cError = "El identificador de la forma de solicitud no contiene valor";
+					LEAVE actualizaFormaSolicitud;
+
+			END IF;
+
             IF cUsuario = "" OR cUsuario = NULL 
 
 				THEN 
@@ -76,19 +103,18 @@ DELIMITER //
 
 				THEN 
 					SET lError = 1; 
-					SET cError = "No contiene valor";
+					SET cError = "La forma de solicitud no contiene valor";
 					LEAVE actualizaFormaSolicitud;
 
 			END IF;
 
-	/*Realiza la actualizacion*/
+			/*Realiza la actualizacion*/
 			UPDATE ctformasolicitud
-				SET ctformasolicitud.cCreaTicket = cCreaTicket,
-                    ctformasolicitud.lActivo,
-                    ctformasolicitud.cUsuario,
-					ctformasolicitud.dtModificado = NOW(),
-					ctformasolicitud.cUsuarioR    = cUsuarioR
-				WHERE ctformasolicitud.cCreaTicket   = cCreaTicket;
+				SET ctformasolicitud.cCreaTicket     = cCreaTicket,
+                    ctformasolicitud.lActivo         = lActivo,
+					ctformasolicitud.dtModificado    = NOW(),
+					ctformasolicitud.cUsuario        = cUsuario
+				WHERE ctformasolicitud.iIDCreaTicket = iIDCreaTicket;
 
 		COMMIT;
 

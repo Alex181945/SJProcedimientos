@@ -1,8 +1,24 @@
+/**
+ * 
+ * Autor: Jennifer Hernandez
+ * Fecha: 25/03/2018
+ * Descripcion: Procedimiento que consulta el registro
+ * de una forma de solicitud
+ *  
+ * Modificaciones:
+ * <Quien modifico:> <Cuando modifico:> <Donde modifico:>
+ * Ejemplo: Alejandro Estrada 09/09/2017 In-15 Fn-19 
+ *
+ * Nota: 0 es falso, 1 es verdadero
+ * 
+ */
+
+ /*Para pruebas*/
+/*USE SENADO;*/
+
 DELIMITER //
 
- CREATE PROCEDURE consultaFormaSolicitud(   IN cCreaTicket VARCHAR(150),
-	                                        IN lActivo BOOL,
-	                                        IN cUsuario VARCHAR(50),
+ CREATE PROCEDURE consultaFormaSolicitud(   IN iIDCreaTicket INTEGER(11),
                                             OUT lError     TINYINT(1), 
                                             OUT cSqlState  VARCHAR(50), 
                                             OUT cError     VARCHAR(200)
