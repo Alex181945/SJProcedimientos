@@ -14,12 +14,12 @@
  /*Delimitador de bloque*/
  DELIMITER //
 
- CREATE PROCEDURE actualizaPeriodo(	IN iIDPeriodo     INTEGER(50),
+ CREATE PROCEDURE actualizaPeriodo(	IN iIDPeriodo     INTEGER(11),
  									IN ctPeriodo      VARCHAR(30),
  									IN cMateria      VARCHAR(30),
  									IN cGrupo        VARCHAR(30),
  									IN lActivo     TINYINT(1),
- 									IN dtModificado DateTime(10),
+ 									IN cUsuario   VARCHAR(30),
  									OUT lError     TINYINT(1), 
  									OUT cSqlState  VARCHAR(50), 
  									OUT cError     VARCHAR(200)
@@ -65,13 +65,13 @@
 				THEN
 
 					SET lError = 1; 
-					SET cError = "El Periodo del sistema no existe";
+					SET cError = "El Periodo  no existe";
 					LEAVE actualizaPeriodo;
 
 			END IF;
 
  			/*Valida que el Periodo no este activo*/
- 			IF NOT EXISTS(SELECT * FROM ctEdificio WHERE ctPeriodo.iIDPeriodo = iIDPeriodo
+ 			IF NOT EXISTS(SELECT * FROM ctPeriodo WHERE ctPeriodo.iIDPeriodo = iIDPeriodo
  													AND ctPeriodo.lActivo  = 1)
  
  				THEN 
@@ -83,7 +83,7 @@
 
 			/*Se valida que los dato no se encunetre nulos o vacios respecto a la tabla*/
 
-			IF ctPeriodo = "" OR ctPeriodo = NULL
+			IF cPeriodo = "" OR cPeriodo = NULL
 
 				THEN
 						SET lEror = 1;
