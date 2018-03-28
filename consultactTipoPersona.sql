@@ -52,17 +52,7 @@
 			SET lError    = 0;
 			SET cSqlState = "";
 			SET cError    = "";
-
-			/*Valida el Tipo Tipo Persona que crea el registro*/
-			IF NOT EXISTS(SELECT * FROM ctTipoPersona WHERE ctTipoPersona.cTipoPersona = cTipoPersona)
-
-				THEN
-					SET lError = 1; 
-					SET cError = "El Tipo Tipo Persona del sistema no existe";
-					LEAVE insertaTipoPersona;
-
-			END IF;
-
+			
 
  			/*Crea una tabla temporal con la estructura de la tabla
  			 *especificada despues del LIKE
@@ -72,6 +62,7 @@
  
  			CREATE TEMPORARY TABLE tt_ctTipoPersona LIKE ctTipoPersona;
 
+ 			
 			/*Comprueba si existe el Tipo Persona*/
 
 			IF EXISTS(SELECT * FROM ctTipoPersona WHERE ctTipoPersona.iIDTipoPersona = iIDTipoPersona)
