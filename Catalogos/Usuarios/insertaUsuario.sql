@@ -177,7 +177,7 @@
 									ctUsuario.dtCreado, 
 									ctUsuario.cUsuarioR) 
 						VALUES	(	cUsuario,
-									cContrasena,
+									SHA(cContrasena), 
 									cNombre,
 									cPaterno,
 									cMaterno,
