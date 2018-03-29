@@ -13,7 +13,7 @@
  */
  
  /*Para pruebas*/
-/*USE SENADO;*/
+USE SENADO;
 
  /*Delimitador de bloque*/
  DELIMITER //
@@ -87,7 +87,7 @@
 
 			END IF;
 
-			IF NOT EXISTS(SELECT * FROM tt_ctUsuario WHERE tt_ctUsuario.cContrasena = cPassword)
+			IF NOT EXISTS(SELECT * FROM tt_ctUsuario WHERE tt_ctUsuario.cContrasena = SHA(cPassword))
 
 				THEN 
 					SET lError = 1; 
