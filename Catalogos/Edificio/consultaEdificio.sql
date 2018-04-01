@@ -1,28 +1,28 @@
 /**
  * 
- * Autor: Alejandro Estrada
- * Fecha: 23/11/2017
- * Descripcion: Procedimiento que valida usuario
+ * Autor: Bogar Chavez
+ * Fecha: 11/03/2018
+ * Descripcion: Procedimiento que valida Edificio
  *  
  * Modificaciones:
  * <Quien modifico:> <Cuando modifico:> <Donde modifico:>
- * Ejemplo: Alejandro Estrada 09/09/2017 In-15 Fn-19 
+ * Ejemplo: Bogar Chavez 11/03/2018 In-15 Fn-19 
  *
  * Nota: 0 es falso, 1 es verdadero
  * 
  */
-
- /*Para pruebas*/
-/*USE SENADO;*/
  
+ /*Para pruebas*/
+ /*USE SENADO;*/
+
  /*Delimitador de bloque*/
  DELIMITER //
 
- CREATE PROCEDURE consultaUsuario(	IN cUsuario  VARCHAR(20),
+ CREATE PROCEDURE consultaEdificio(	IN iIDEdificio  INTEGER(20),
  									OUT lError TINYINT(1), 
  									OUT cSqlState VARCHAR(50), 
  									OUT cError VARCHAR(200))
- 	consultaUsuario:BEGIN
+ 	consultaEdificio:BEGIN
 
 		/*Manejo de Errores*/ 
 		DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -58,35 +58,35 @@
 			/*Crea una tabla temporal con la estructura de la tabla
 			 *especificada despues del LIKE
 			 */
-			DROP TEMPORARY TABLE IF EXISTS tt_ctUsuario;
+			DROP TEMPORARY TABLE IF EXISTS tt_ctEdificios;
 
-			CREATE TEMPORARY TABLE tt_ctUsuario LIKE ctUsuario;
+			CREATE TEMPORARY TABLE tt_ctEdificios LIKE ctEdificio;
 
-			/*Comprueba si existe el usuario*/
-			IF EXISTS(SELECT * FROM ctUsuario WHERE ctUsuario.cUsuario = cUsuario)
+			/*Comprueba si existe el Edif*/
+			IF EXISTS(SELECT * FROM ctEdificios WHERE ctEdificios.iIDEdificio = iIDEdificio)
 
-				/*Si existe copia toda la informacion del usuario a la tabla temporal*/
-				THEN INSERT INTO tt_ctUsuario SELECT * FROM ctUsuario WHERE ctUsuario.cUsuario = cUsuario;
+				/*Si existe copia toda la informacion del edificio a la tabla temporal*/
+				THEN INSERT INTO tt_ctEdificios SELECT * FROM ctEdificios WHERE ctEdificios.iIDEdificio = iIDEdificio;
 
 				/*Si no manda error de que no lo encontro*/
 				ELSE 
 					SET lError = 1; 
-					SET cError = "Usuario no existe";
-					LEAVE consultaUsuario;
+					SET cError = "Edificio no existe";
+					LEAVE consultaEdificio;
 
 			END IF;
 
-			/*Valida que el usuario este activo*/
-			IF NOT EXISTS(SELECT * FROM tt_ctUsuario WHERE tt_ctUsuario.lActivo = 1)
+			/*Valida que el edificio este activo*/
+			IF NOT EXISTS(SELECT * FROM tt_ctEdificios WHERE tt_ctEdificios.lActivo = 1)
 
 				THEN 
 					SET lError = 1; 
-					SET cError = "Usuario no activo";
-					LEAVE consultaUsuario;
+					SET cError = "Edificio no activo";
+					LEAVE consultaEdificio;
 
 			END IF;
 
-			SELECT * FROM tt_ctUsuario;
+			SELECT * FROM tt_ctEdificios;
 
 		COMMIT;
 

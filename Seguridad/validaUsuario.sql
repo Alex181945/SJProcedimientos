@@ -12,14 +12,17 @@
  * 
  */
  
+ /*Para pruebas*/
+/*USE SENADO;*/
+
  /*Delimitador de bloque*/
  DELIMITER //
 
- CREATE PROCEDURE validaUsuario(	IN cUsuario  VARCHAR(20),
- 									IN cPassword VARCHAR(20),
- 									OUT lError TINYINT(1), 
+ CREATE PROCEDURE validaUsuario(	IN cUsuario   VARCHAR(20),
+ 									IN cPassword  VARCHAR(20),
+ 									OUT lError    TINYINT(1), 
  									OUT cSqlState VARCHAR(50), 
- 									OUT cError VARCHAR(200))
+ 									OUT cError    VARCHAR(200))
  	validaUsuario:BEGIN
 
 		/*Manejo de Errores*/ 
@@ -70,7 +73,7 @@
 				ELSE 
 					SET lError = 1; 
 					SET cError = "Usuario no existe";
-					LEAVE consultaUsuario;
+					LEAVE validaUsuario;
 
 			END IF;
 
@@ -80,16 +83,16 @@
 				THEN 
 					SET lError = 1; 
 					SET cError = "Usuario no activo";
-					LEAVE consultaUsuario;
+					LEAVE validaUsuario;
 
 			END IF;
 
-			IF NOT EXISTS(SELECT * FROM tt_ctUsuario WHERE tt_ctUsuario.cContrasena = cPassword)
+			IF NOT EXISTS(SELECT * FROM tt_ctUsuario WHERE tt_ctUsuario.cContrasena = SHA(cPassword))
 
 				THEN 
 					SET lError = 1; 
 					SET cError = "Usuario y/o Contraseña erroneas";
-					LEAVE consultaUsuario;
+					LEAVE validaUsuario;
 
 			END IF;
 
