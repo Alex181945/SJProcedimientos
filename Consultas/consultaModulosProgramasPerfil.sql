@@ -16,6 +16,8 @@
  /*Para pruebas*/
  USE SENADO;
 
+ DROP PROCEDURE IF EXISTS `consultaModulosProgramasPerfil`;
+
  /*Delimitador de bloque*/
  DELIMITER //
 
@@ -55,9 +57,9 @@
 			SET cSqlState = "";
 			SET cError    = "";
 
-			SELECT iIDPerfil , iIDModulo ,(SELECT iPartida, cPrograma, cRuta FROM ctProgramasModulo 
+			SELECT ctModuloPerfil.iIDPerfil, ctModuloPerfil.iIDModulo ,(SELECT iPartida, cPrograma, cRuta FROM ctProgramasModulo 
 				WHERE ctProgramasModulo.iIDModulo = ctModuloPerfil.iIDModulo 
-				AND ctProgramasModulo.lActivo = 1 ) 
+				AND ctProgramasModulo.lActivo = 1 )
 			FROM ctModuloPerfil WHERE ctModuloPerfil.iIDPerfil = iIDPerfil AND ctModuloPerfil.lActivo  = 1;
 
 
