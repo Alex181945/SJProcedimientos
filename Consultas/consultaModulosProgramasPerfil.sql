@@ -55,8 +55,10 @@
 			SET cSqlState = "";
 			SET cError    = "";
 
-			SELECT * FROM ctModuloPerfil WHERE ctModuloPerfil.iIDPerfil = iIDPerfil
-											AND ctModuloPerfil.lActivo  = 1
+			SELECT iIDPerfil , iIDModulo ,(SELECT iPartida, cPrograma, cRuta FROM ctProgramasModulo 
+				WHERE ctProgramasModulo.iIDModulo = ctModuloPerfil.iIDModulo 
+				AND ctProgramasModulo.lActivo = 1 ) 
+			FROM ctModuloPerfil WHERE ctModuloPerfil.iIDPerfil = iIDPerfil AND ctModuloPerfil.lActivo  = 1;
 
 
 		COMMIT;
