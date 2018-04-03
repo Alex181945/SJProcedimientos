@@ -14,7 +14,7 @@
  */
  
  /*Para pruebas*/
- /*USE SENADO;*/
+ USE SENADO;
 
  /*Delimitador de bloque*/
  DELIMITER //
@@ -55,8 +55,9 @@
 			SET cSqlState = "";
 			SET cError    = "";
 
-			/*Consulta*/
-			CALL consultaModulosPerfil(iTipoConsulta, iIDPerfil, lError, cSqlState, cError);
+			SELECT * FROM ctModuloPerfil WHERE ctModuloPerfil.iIDPerfil = iIDPerfil
+											AND ctModuloPerfil.lActivo  = 1
+
 
 		COMMIT;
 
