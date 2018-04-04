@@ -14,12 +14,12 @@
  /*Delimitador de bloque*/
  DELIMITER //
 
- CREATE PROCEDURE actualizaPeriodo(	IN iIDPeriodo     INTEGER(11),
- 									IN ctPeriodo      VARCHAR(30),
+ CREATE PROCEDURE actualizaPeriodo(	IN iIDPeriodo    INTEGER(11),
+ 									IN cPeriodo      VARCHAR(30),
  									IN cMateria      VARCHAR(30),
  									IN cGrupo        VARCHAR(30),
- 									IN lActivo     TINYINT(1),
- 									IN cUsuario   VARCHAR(30),
+ 									IN lActivo       TINYINT(1),
+ 									IN cUsuario      VARCHAR(30),
  									OUT lError     TINYINT(1), 
  									OUT cSqlState  VARCHAR(50), 
  									OUT cError     VARCHAR(200)
@@ -72,9 +72,10 @@
 
  			/*Valida que el Periodo no este activo*/
  			IF NOT EXISTS(SELECT * FROM ctPeriodo WHERE ctPeriodo.iIDPeriodo = iIDPeriodo
- 													AND ctPeriodo.lActivo  = 1)
+ 													AND ctPeriodo.lActivo    = 1)
  
  				THEN 
+
  					SET lError = 1; 
  					SET cError = "El Periodo ya fue borrado con anterioridad";
  					LEAVE actualizaPeriodo;
@@ -96,7 +97,7 @@
 				THEN
 						SET lEror = 1;
 						SET cError = "La Materia no tiene valor";
-						LEAVE actualizaMateria;
+						LEAVE actualizaPeriodo;
 			END IF;
 
 			IF cGrupo = "" OR cGrupo = NULL
@@ -104,15 +105,16 @@
 				THEN
 						SET lEror = 1;
 						SET cError = "El Grupo no tiene valor";
-						LEAVE actualizaGrupo;
+						LEAVE actualizaPeriodo;
 			END IF;
 
 			UPDATE ctPeriodo 
-							SET ctPeriodo.ciPeriodo      = ciPeriodo,
-								  ctPeriodo.cMateria,    = cMateria,
-								  ctPeriodo.cGrupo,      = cGrupo,
-								  ctPeriodo.lActivo,     = lActivo,
+							  SET ctPeriodo.cPeriodo    = cPeriodo,
+								  ctPeriodo.cMateria    = cMateria,
+								  ctPeriodo.cGrupo      = cGrupo,
+								  ctPeriodo.lActivo     = lActivo,
 								  ctPeriodo.dtModificado = NOW(),
+								  ctPeriodo.cUsuario    = cUsuario
 								  WHERE ctPeriodo.iIDPeriodo;
 	
 
