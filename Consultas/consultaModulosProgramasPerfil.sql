@@ -56,17 +56,16 @@
 			SET cSqlState = "";
 			SET cError    = "";
 
-			/*SELECT ctModuloPerfil.iIDModulo,
-				(SELECT ctModulos.cModulo, (SELECT ctProgramasModulo.iPartida, ctProgramasModulo.cPrograma, ctProgramasModulo.cRuta 
-											FROM ctProgramasModulo 
-												WHERE ctModulos.iIDModulo = ctProgramasModulo.iIDModulo
-												AND   ctProgramasModulo.lActivo   = 1) 
-					FROM ctModulos 
-						WHERE ctModuloPerfil.iIDModulo = ctModulos.iIDModulo
-						AND ctModulos.lActivo  = 1 )
-			FROM ctModuloPerfil WHERE ctModuloPerfil.iIDPerfil = iIDPerfil AND ctModuloPerfil.lActivo  = 1;*/
-
-			SELECT ctModuloPerfil.iIDModulo, (SELECT ctModulos.cModulo FROM ctModulos WHERE ctModulos.iIDModulo = ctModuloPerfil.iIDModulo) as cModulo FROM ctModuloPerfil WHERE ctModuloPerfil.iIDPerfil = iIDPerfil;
+			SELECT ctModuloPerfil.iIDModulo, 
+				(SELECT ctModulos.cModulo FROM ctModulos 
+					WHERE ctModulos.iIDModulo = ctModuloPerfil.iIDModulo AND ctModulos.lActivo = 1) as cModulo, 
+				ctProgramasModulo.iPartida, 
+				ctProgramasModulo.cPrograma, 
+				ctProgramasModulo.cRuta, 
+				ctProgramasModulo.lActivo 
+			FROM ctModuloPerfil INNER JOIN ctProgramasModulo 
+				ON ctModuloPerfil.iIDModulo = ctProgramasModulo.iIDModulo AND ctProgramasModulo.lActivo = 1
+			WHERE ctModuloPerfil.iIDPerfil = iIDPerfil AND ctModuloPerfil.lActivo = 1;
 
 
 		COMMIT;
