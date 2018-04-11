@@ -11,6 +11,10 @@
  * Nota: 0 es falso, 1 es verdadero
  * 
  */
+
+ /*Para pruebas*/
+ /*USE SENADO;*/
+
  DELIMITER //
 CREATE PROCEDURE insertaArea(
                             IN  cArea VARCHAR(150) ,

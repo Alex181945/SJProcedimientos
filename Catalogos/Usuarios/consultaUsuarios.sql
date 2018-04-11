@@ -13,6 +13,9 @@
  * 
  */
 
+ /*Para pruebas*/
+/*USE SENADO;*/
+
   /*Delimitador de bloque*/
  DELIMITER //
 
@@ -67,7 +70,7 @@
 			    WHEN 1 THEN INSERT INTO tt_ctUsuario SELECT * FROM ctUsuario WHERE ctUsuario.lActivo = 1;
 			    WHEN 2 THEN INSERT INTO tt_ctUsuario SELECT * FROM ctUsuario;
 
-			END CASE
+			END CASE;
 
 			/*Resultado de las consultas anteriores*/
 			SELECT * FROM tt_ctUsuario;

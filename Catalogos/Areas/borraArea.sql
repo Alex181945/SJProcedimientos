@@ -14,13 +14,16 @@
  * inhabilita
  */
 
+ /*Para pruebas*/
+ /*USE SENADO;*/
+
  /*Delimitador de bloque*/
  DELIMITER //
-CREATE PROCEDURE borraArea( IN iIDArea INTEGER(11),
-	 						IN cArea  VARCHAR(150),
- 							OUT lError TINYINT(1), 
+CREATE PROCEDURE borraArea( IN iIDArea    INTEGER(11),
+	 						IN cUsuario   VARCHAR(20),
+ 							OUT lError    TINYINT(1), 
  							OUT cSqlState VARCHAR(50), 
- 							OUT cError VARCHAR(200))	 
+ 							OUT cError    VARCHAR(200))	 
 	borraArea:BEGIN
 
 		/*Manejo de Errores*/ 
@@ -54,30 +57,19 @@ CREATE PROCEDURE borraArea( IN iIDArea INTEGER(11),
 			SET cSqlState = "";
 			SET cError    = "";
 
-			/*Se valida que el usuarioR exista y este activo*/
-			IF NOT EXISTS(SELECT * FROM ctAreas WHERE ctAreas.cArea = cAreaR
-													AND ctAreas.lActivo  = 1)
-
-				THEN
-					SET lError = 1; 
-					SET cError = "El area del sistema no existe o no esta activo";
-					LEAVE borraArea;
-
-			END IF;
-
 			/*Valida que el usuario exista*/
-			IF NOT EXISTS(SELECT * FROM ctAreas WHERE ctAreas.cArea = cArea)
+			IF NOT EXISTS(SELECT * FROM ctAreas WHERE ctAreas.iIDArea = iIDArea)
 
 				THEN 
 					SET lError = 1; 
-					SET cError = "Área no existe";
+					SET cError = "Area no existe";
 					LEAVE borraArea;
 
 			END IF;
 
 			/*Valida que el usuario no este activo*/
-			IF NOT EXISTS(SELECT * FROM ctAreas WHERE ctAreas.cArea = cArea 
-													AND ctAreas.lActivo  = 1)
+			IF NOT EXISTS(SELECT * FROM ctAreas WHERE ctAreas.iIDArea = iIDArea 
+												AND ctAreas.lActivo  = 1)
 
 				THEN 
 					SET lError = 1; 
@@ -87,7 +79,11 @@ CREATE PROCEDURE borraArea( IN iIDArea INTEGER(11),
 			END IF;
 
 			/*Realiza el borrado logico solo se actualiza el campo lActivo*/
-			UPDATE ctAreas SET ctAreas.lActivo = 0 WHERE ctAreas.cArea = cArea;
+			UPDATE ctAreas SET
+				ctAreas.lActivo       = 0,
+				ctAreas.dtModificado  = NOW(),
+				ctAreas.cUsuario      = cUsuario 
+			WHERE ctAreas.iIDArea = iIDArea;
 
 		COMMIT;
 

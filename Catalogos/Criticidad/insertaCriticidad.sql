@@ -11,9 +11,13 @@
  * Nota: 0 es falso, 1 es verdadero
  * 
  */
-  DELIMITER //
-CREATE PROCEDURE insertaCriticidad( IN 	cCriticidad VARCHAR(150) NOT NULL,
-									IN 	cUsuario VARCHAR(50) NOT NULL,
+
+/*Para pruebas*/
+/*USE SENADO;*/
+
+DELIMITER //
+CREATE PROCEDURE insertaCriticidad( IN 	cCriticidad VARCHAR(150),
+									IN 	cUsuario VARCHAR(50),
  									OUT lError TINYINT(1), 
  									OUT cSqlState VARCHAR(50), 
  									OUT cError VARCHAR(200))
@@ -60,7 +64,7 @@ CREATE PROCEDURE insertaCriticidad( IN 	cCriticidad VARCHAR(150) NOT NULL,
 				THEN 
 					SET lError = 1;
 					SET cError = "La Criticidad no tiene valor";
-					LEAVE ctCriticidad;
+					LEAVE insertaCriticidad;
 
 			END IF;
 
@@ -69,7 +73,7 @@ CREATE PROCEDURE insertaCriticidad( IN 	cCriticidad VARCHAR(150) NOT NULL,
 				THEN 
 					SET lError = 1;
 					SET cError = "El usuario no contiene un valor";
-					LEAVE ctCriticidad;
+					LEAVE insertaCriticidad;
 			END IF;
 
 			INSERT INTO ctCriticidad(

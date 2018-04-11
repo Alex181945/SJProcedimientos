@@ -1,8 +1,9 @@
 /**
  * 
- * Autor: Alejandro Estrada
- * Fecha: 23/11/2017
- * Descripcion: Procedimiento que valida usuario
+ * Autor: Jennifer Hernandez
+ * Fecha: 25/03/2018
+ * Descripcion: Procedimiento que consulta el registro
+ * de una forma de solicitud
  *  
  * Modificaciones:
  * <Quien modifico:> <Cuando modifico:> <Donde modifico:>
@@ -14,17 +15,19 @@
 
  /*Para pruebas*/
 /*USE SENADO;*/
- 
- /*Delimitador de bloque*/
- DELIMITER //
 
- CREATE PROCEDURE consultaUsuario(	IN cUsuario  VARCHAR(20),
- 									OUT lError TINYINT(1), 
- 									OUT cSqlState VARCHAR(50), 
- 									OUT cError VARCHAR(200))
- 	consultaUsuario:BEGIN
+DELIMITER //
 
-		/*Manejo de Errores*/ 
+ CREATE PROCEDURE consultaFormaSolicitud(   IN iIDCreaTicket INTEGER(11),
+                                            OUT lError     TINYINT(1), 
+                                            OUT cSqlState  VARCHAR(50), 
+                                            OUT cError     VARCHAR(200)
+ 								            )
+
+ 	/*Nombre del Procedimiento*/
+ 	consultaFormaSolicitud:BEGIN
+
+     /*Manejo de Errores*/ 
 		DECLARE EXIT HANDLER FOR SQLEXCEPTION
 		BEGIN
 			GET DIAGNOSTICS CONDITION 1
@@ -54,39 +57,34 @@
 			SET lError    = 0;
 			SET cSqlState = "";
 			SET cError    = "";
+        
 
-			/*Crea una tabla temporal con la estructura de la tabla
-			 *especificada despues del LIKE
-			 */
-			DROP TEMPORARY TABLE IF EXISTS tt_ctUsuario;
+			CREATE TEMPORARY TABLE tt_ctFormaSolicitud LIKE ctFormaSolicitud;
 
-			CREATE TEMPORARY TABLE tt_ctUsuario LIKE ctUsuario;
-
-			/*Comprueba si existe el usuario*/
-			IF EXISTS(SELECT * FROM ctUsuario WHERE ctUsuario.cUsuario = cUsuario)
+			IF EXISTS(SELECT * FROM ctFormaSolicitud WHERE ctFormaSolicitud.iIDCreaTicket = iIDCreaTicket)
 
 				/*Si existe copia toda la informacion del usuario a la tabla temporal*/
-				THEN INSERT INTO tt_ctUsuario SELECT * FROM ctUsuario WHERE ctUsuario.cUsuario = cUsuario;
+				THEN INSERT INTO tt_ctFormaSolicitud SELECT * FROM ctFormaSolicitud WHERE ctFormaSolicitud.iIDCreaTicket = iIDCreaTicket;
 
 				/*Si no manda error de que no lo encontro*/
 				ELSE 
 					SET lError = 1; 
-					SET cError = "Usuario no existe";
-					LEAVE consultaUsuario;
+					SET cError = "No hay solicitudes";
+					LEAVE consultaFormaSolicitud;
 
 			END IF;
 
 			/*Valida que el usuario este activo*/
-			IF NOT EXISTS(SELECT * FROM tt_ctUsuario WHERE tt_ctUsuario.lActivo = 1)
+			IF NOT EXISTS(SELECT * FROM tt_ctFormaSolicitud WHERE tt_ctFormaSolicitud.lActivo = 1)
 
 				THEN 
 					SET lError = 1; 
-					SET cError = "Usuario no activo";
-					LEAVE consultaUsuario;
+					SET cError = "Formato no activo";
+					LEAVE consultaFormaSolicitud;
 
 			END IF;
 
-			SELECT * FROM tt_ctUsuario;
+			SELECT * FROM tt_ctFormaSolicitud;
 
 		COMMIT;
 

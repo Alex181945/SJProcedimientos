@@ -12,10 +12,13 @@
  * 
  */
  
+ /*Para pruebas*/
+ /*USE SENADO;*/
+
  /*Delimitador de bloque*/
  DELIMITER //
 
- CREATE PROCEDURE consultaEdificio(	IN cEdificio  VARCHAR(20),
+ CREATE PROCEDURE consultaEdificio(	IN iIDEdificio  INTEGER(20),
  									OUT lError TINYINT(1), 
  									OUT cSqlState VARCHAR(50), 
  									OUT cError VARCHAR(200))
@@ -60,10 +63,10 @@
 			CREATE TEMPORARY TABLE tt_ctEdificios LIKE ctEdificio;
 
 			/*Comprueba si existe el Edif*/
-			IF EXISTS(SELECT * FROM ctEdificios WHERE ctEdificios.cEdificio = cEdificio)
+			IF EXISTS(SELECT * FROM ctEdificios WHERE ctEdificios.iIDEdificio = iIDEdificio)
 
 				/*Si existe copia toda la informacion del edificio a la tabla temporal*/
-				THEN INSERT INTO tt_ctEdificios SELECT * FROM ctEdificios WHERE ctEdificios.cEdificio = cEdificio;
+				THEN INSERT INTO tt_ctEdificios SELECT * FROM ctEdificios WHERE ctEdificios.iIDEdificio = iIDEdificio;
 
 				/*Si no manda error de que no lo encontro*/
 				ELSE 
@@ -79,7 +82,7 @@
 				THEN 
 					SET lError = 1; 
 					SET cError = "Edificio no activo";
-					LEAVE consulta;
+					LEAVE consultaEdificio;
 
 			END IF;
 
