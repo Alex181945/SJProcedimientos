@@ -14,8 +14,7 @@
  */
 
  /*Para pruebas*/
- /*USE SENADO;*/
-
+ USE SENADO;
  /*Delimitador de bloque*/
  DELIMITER //
 
