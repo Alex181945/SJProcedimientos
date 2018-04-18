@@ -14,8 +14,8 @@
  */
  
  /*Para pruebas*/
- USE SENADO;
- DROP PROCEDURE IF EXISTS `consultaModulosProgramasPerfil`;
+ /*USE SENADO;
+ DROP PROCEDURE IF EXISTS `consultaModulosProgramasPerfil`;*/
 
  /*Delimitador de bloque*/
  DELIMITER //

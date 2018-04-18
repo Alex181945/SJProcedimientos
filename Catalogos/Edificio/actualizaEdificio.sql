@@ -14,13 +14,15 @@
  */
 
  /*Para pruebas*/
- /*USE SENADO;*/
+ /*USE SENADO;
+ DROP PROCEDURE IF EXISTS `actualizaEdificio`;*/
 
  /*Delimitador de bloque*/
  DELIMITER //
 
  CREATE PROCEDURE actualizaEdificio(IN iIDEdificio INTEGER(11) ,
  									IN cEdificio VARCHAR(150) ,
+ 									IN cAbreviatura VARCHAR(50) ,
 									IN iPisos INTEGER,
 									IN cPisoEsp VARCHAR(100),
 									IN cCalle VARCHAR(150) ,

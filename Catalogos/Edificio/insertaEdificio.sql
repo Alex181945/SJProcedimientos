@@ -12,10 +12,12 @@
  * 
  */
 
- /*USE SENADO;*/
+ /*USE SENADO;
+ DROP PROCEDURE IF EXISTS `insertaEdificio`;*/
 
  DELIMITER //
 CREATE PROCEDURE insertaEdificio(	IN cEdificio VARCHAR(150) ,
+									IN cAbreviatura VARCHAR(50) ,
 									IN iPisos INTEGER,
 									IN cPisoEsp VARCHAR(100),
 									IN cCalle VARCHAR(150) ,
@@ -136,7 +138,8 @@ CREATE PROCEDURE insertaEdificio(	IN cEdificio VARCHAR(150) ,
 
 
 			INSERT INTO ctEdificios(
-									ctEdificios.cEdificio, 
+									ctEdificios.cEdificio,
+									ctEdificios.cAbreviatura,
 									ctEdificios.iPisos, 
 									ctEdificios.cPisoEsp, 
 									ctEdificios.cCalle, 
@@ -149,6 +152,7 @@ CREATE PROCEDURE insertaEdificio(	IN cEdificio VARCHAR(150) ,
 									ctEdificios.dtCreado,
 									ctEdificios.cUsuario)
 						VALUES	(   cEdificio,
+									cAbreviatura,
 									iPisos,
 									cPisoEsp,
 									cCalle,
