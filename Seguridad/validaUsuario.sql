@@ -13,7 +13,7 @@
  */
  
  /*Para pruebas*/
-USE escuela;
+USE escuelast;
 
  /*Delimitador de bloque*/
  DELIMITER //
