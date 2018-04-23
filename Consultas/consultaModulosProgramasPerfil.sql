@@ -14,8 +14,8 @@
  */
  
  /*Para pruebas*/
- USE SENADO;
- DROP PROCEDURE IF EXISTS `consultaModulosProgramasPerfil`;
+ /*USE SENADO;
+ DROP PROCEDURE IF EXISTS `consultaModulosProgramasPerfil`;*/
 
  /*Delimitador de bloque*/
  DELIMITER //
@@ -55,6 +55,24 @@
 			SET lError    = 0;
 			SET cSqlState = "";
 			SET cError    = "";
+
+			IF iTipoConsulta = 0 OR iTipoConsulta = NULL
+
+				THEN 
+					SET lError = 1; 
+					SET cError = "El tipo de consulta no contiene valor";
+					LEAVE consultaModulosProgramasPerfil;
+
+			END IF;
+
+			IF iIDPerfil = 0 OR iIDPerfil = NULL
+
+				THEN 
+					SET lError = 1; 
+					SET cError = "El tipo de perfil no contiene valor";
+					LEAVE consultaModulosProgramasPerfil;
+
+			END IF;
 
 			SELECT ctModuloPerfil.iIDModulo, 
 				(SELECT ctModulos.cModulo FROM ctModulos 
