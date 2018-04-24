@@ -1,4 +1,4 @@
-/*USE SENADO;*/
+USE SENADO;
 
  /*Delimitador de bloque*/
  DELIMITER //
@@ -44,7 +44,7 @@
 
 
 			/*Verifica que el servicio a crear no exista con anterioridad*/
-			IF EXISTS(SELECT * FROM ctTipoServicio WHERE ctTipoServicio.cTipoServicio = cTipoServicio)
+			IF EXISTS(SELECT * FROM cttiposervicio WHERE cttiposervicio.cTipoServicio = cTipoServicio)
 
 				THEN 
 					SET lError = 1; 
@@ -73,12 +73,12 @@
 			END IF;
 
 			/*Insercion del usuario*/
-			INSERT INTO ctTipoServicio(
-                                    ctTipoServicio.cTipoServicio, 
-									ctTipoServicio.lActivo, 
-									ctTipoServicio.dtCreado,
-                                    ctTipoServicio.cUsuario) 
-						VALUES	(	cTipoServicio,
+			INSERT INTO cttiposervicio(
+                                    cttiposervicio.cTipoServicio, 
+									cttiposervicio.lActivo, 
+									cttiposervicio.dtCreado,
+                                    cttiposervicio.cUsuario) 
+						VALUES	(	cttiposervicio,
 									1,
 									NOW(),
                                     cUsuario);

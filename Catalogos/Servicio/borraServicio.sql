@@ -1,5 +1,5 @@
 
-/*USE SENADO;*/
+USE SENADO;
 
  /*Delimitador de bloque*/
  DELIMITER //
@@ -44,7 +44,7 @@
 
 
 			/*Valida que el tipo de servicio exista*/
-			IF NOT EXISTS(SELECT * FROM ctTipoServicio WHERE ctTipoServicio.iIDTipoServicio = iIDTipoServicio)
+			IF NOT EXISTS(SELECT * FROM cttiposervicio WHERE cttiposervicio.iIDTipoServicio = iIDTipoServicio)
 
 				THEN 
 					SET lError = 1; 
@@ -54,8 +54,8 @@
 			END IF;
 
 			/*Valida que el tipo de servicio no este activo*/
-			IF NOT EXISTS(SELECT * FROM ctTipoServicio WHERE ctTipoServicio.iIDTipoServicio = iIDTipoServicio 
-													AND ctTipoServicio.lActivo  = 1)
+			IF NOT EXISTS(SELECT * FROM cttiposervicio WHERE cttiposervicio.iIDTipoServicio = iIDTipoServicio
+													AND cttiposervicio.lActivo  = 1)
 
 				THEN 
 					SET lError = 1; 
@@ -64,12 +64,8 @@
 
 			END IF;
 
-			/*Realiza el borrado logico solo se actualiza el campo lActivo*/
-			UPDATE ctTipoServicio SET 
-				ctTipoServicio.lActivo       = 0,
-				ctTipoServicio.dtModificado  = NOW(),
-				iIDTipoServicio.cUsuario = cUsuario,
-			 WHERE ctTipoServicio.iIDTipoServicio   = iIDTipoServicio;
+
+			 CALL actualizaServicio();
 
 		COMMIT;
 

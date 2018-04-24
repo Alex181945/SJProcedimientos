@@ -1,5 +1,5 @@
 
-/*USE SENADO;*/
+USE SENADO;
 
  /*Delimitador de bloque*/
  DELIMITER //
@@ -45,23 +45,23 @@
 			SET cError    = "";
 			
 			/*Se valida que el TipoServicio exista y este activo*/
-			IF NOT EXISTS(SELECT * FROM ctTipoServicio WHERE ctTipoServicio.cTipoServicio = cTipoServicio
-													AND ctTipoServicio.lActivo  = 1)
+			IF NOT EXISTS(SELECT * FROM cttiposervicio WHERE cttiposervicio.iIDTipoServicio = iIDTipoServicio
+													AND cttiposervicio.lActivo  = 1)
 
 				THEN
 					SET lError = 1; 
 					SET cError = "El tipo de servicio del sistema no existe o no esta activo";
-					LEAVE actualizaUsuario;
+					LEAVE actualizaServicio;
 
 			END IF;
 
 			/*Valida que el Servicio exista*/
-			IF NOT EXISTS(SELECT * FROM ctTipoServicio WHERE ctTipoServicio.iIDTipoServicio = iIDTipoServicio)
+			IF NOT EXISTS(SELECT * FROM cttiposervicio WHERE cttiposervicio.iIDTipoServicio = iIDTipoServicio)
 
 				THEN 
 					SET lError = 1; 
 					SET cError = "Tipo de servicio no existe";
-					LEAVE actualizaUsuario;
+					LEAVE actualizaServicio;
 
 			END IF;
 
@@ -71,7 +71,7 @@
 				THEN 
 					SET lError = 1; 
 					SET cError = "El Servicio no contiene valor";
-					LEAVE actualizaUsuario;
+					LEAVE actualizaServicio;
 
 			END IF;
 
@@ -80,17 +80,17 @@
 				THEN 
 					SET lError = 1; 
 					SET cError = "Usuario no contiene valor";
-					LEAVE actualizaUsuario;
+					LEAVE actualizaServicio;
 
 			END IF;
 
 			/*Realiza la actualizacion*/
-			UPDATE ctTipoServicio
-				SET ctTipoServicio.cUsuario     = cTipoServicio,
-					ctTipoServicio.lActivo      = lActivo,
-					ctTipoServicio.dtModificado = NOW(),
-					ctTipoServicio.cUsuario    = cUsuario
-				WHERE ctTipoServicio.iIDTipoServicio   = iIDTipoServicio;
+			UPDATE cttiposervicio
+				SET cttiposervicio.cTipoServicio    = cTipoServicio,
+					cttiposervicio.lActivo      	= lActivo,
+					cttiposervicio.dtModificado 	= NOW(),
+					cttiposervicio.cUsuario    		= cUsuario
+				WHERE cttiposervicio.iIDTipoServicio   = iIDTipoServicio;
 
 		COMMIT;
 
