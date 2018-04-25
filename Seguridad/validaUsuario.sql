@@ -13,12 +13,13 @@
  */
  
  /*Para pruebas*/
-USE escuelast;
 
+/*USE escuelast;
+DROP PROCEDURE IF EXISTS `validaUsuario`;*/
  /*Delimitador de bloque*/
  DELIMITER //
 
- CREATE PROCEDURE validaUsuario(	IN cUsuario   VARCHAR(20),
+ CREATE PROCEDURE validaUsuario(	IN cUsuario   VARCHAR(50),
  									IN cPassword  VARCHAR(20),
  									OUT lError    TINYINT(1), 
  									OUT cSqlState VARCHAR(50), 
@@ -91,7 +92,7 @@ USE escuelast;
 
 				THEN 
 					SET lError = 1; 
-					SET cError = "Usuario y/o Contraseña erroneas";
+					SET cError = "Usuario y/o Contrasena erroneas";
 					LEAVE validaUsuario;
 
 			END IF;
