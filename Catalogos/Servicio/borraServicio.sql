@@ -10,7 +10,6 @@ USE SENADO;
  								OUT cSqlState VARCHAR(50), 
  								OUT cError VARCHAR(200))
  	borraServicio:BEGIN
-
 		/*Manejo de Errores*/ 
 		DECLARE EXIT HANDLER FOR SQLEXCEPTION
 		BEGIN

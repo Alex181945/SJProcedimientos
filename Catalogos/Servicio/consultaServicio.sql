@@ -3,7 +3,7 @@ USE SENADO;
  /*Delimitador de bloque*/
  DELIMITER //
 
- CREATE PROCEDURE consultaServicio(	IN cttiposervicio  VARCHAR(20),
+ CREATE PROCEDURE consultaServicio(	IN iIDTipoServicio  VARCHAR(20),
  									OUT lError TINYINT(1), 
  									OUT cSqlState VARCHAR(50), 
  									OUT cError VARCHAR(200))
@@ -48,10 +48,10 @@ USE SENADO;
 			CREATE TEMPORARY TABLE tt_cttiposervicio LIKE cttiposervicio;
 
 			/*Comprueba si existe el servicio*/
-			IF EXISTS(SELECT * FROM cttiposervicio WHERE cttiposervicio.cttiposervicio = cttiposervicio)
+			IF EXISTS(SELECT * FROM cttiposervicio WHERE cttiposervicio.iIDTipoServicio = iIDTipoServicio)
 
 				/*Si existe copia toda la informacion del servicio a la tabla temporal*/
-				THEN INSERT INTO tt_cttiposervicio SELECT * FROM cttiposervicio WHERE cttiposervicio.cttiposervicio = cttiposervicio;
+				THEN INSERT INTO tt_cttiposervicio SELECT * FROM cttiposervicio WHERE cttiposervicio.iIDTipoServicio = iIDTipoServicio;
 
 				/*Si no manda error de que no lo encontro*/
 				ELSE 
@@ -63,7 +63,6 @@ USE SENADO;
 
 			/*Valida que el servicio este activo*/
 			IF NOT EXISTS(SELECT * FROM tt_cttiposervicio WHERE tt_cttiposervicio.lActivo = 1)
-
 				THEN 
 					SET lError = 1; 
 					SET cError = "Tipo de Servicio no activo";

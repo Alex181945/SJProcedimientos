@@ -44,13 +44,13 @@ USE SENADO;
 			SET cSqlState = "";
 			SET cError    = "";
 			
-			/*Se valida que el TipoServicio exista y este activo*/
-			IF NOT EXISTS(SELECT * FROM cttiposervicio WHERE cttiposervicio.iIDTipoServicio = iIDTipoServicio
+			/*Se valida que el usuario exista y este activo*/
+			IF NOT EXISTS(SELECT * FROM cttiposervicio WHERE cttiposervicio.cUsuario = cUsuario
 													AND cttiposervicio.lActivo  = 1)
 
 				THEN
 					SET lError = 1; 
-					SET cError = "El tipo de servicio del sistema no existe o no esta activo";
+					SET cError = "El usuario del sistema no existe o no esta activo";
 					LEAVE actualizaServicio;
 
 			END IF;
