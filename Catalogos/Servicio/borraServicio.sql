@@ -5,7 +5,7 @@ USE SENADO;
  DELIMITER //
 
  CREATE PROCEDURE borraServicio(IN iIDTipoServicio INTEGER (11),
-	 							IN cTipoServicio  VARCHAR(20),
+	 							IN cUsuario  VARCHAR(20),
  								OUT lError TINYINT(1), 
  								OUT cSqlState VARCHAR(50), 
  								OUT cError VARCHAR(200))
@@ -64,7 +64,11 @@ USE SENADO;
 			END IF;
 
 
-			 CALL actualizaServicio();
+			UPDATE cttiposervicio
+				SET cttiposervicio.lActivo       	= 0,
+					cttiposervicio.dtModificado  	= NOW(),
+                    cttiposervicio.cUsuario      	= cUsuario
+				WHERE cttiposervicio.iIDTipoServicio = iIDTipoServicio;
 
 		COMMIT;
 
