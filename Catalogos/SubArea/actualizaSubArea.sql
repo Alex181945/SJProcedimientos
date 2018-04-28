@@ -2,7 +2,7 @@
  * 
  * Autor: Jennifer Hernandez
  * Fecha: 28/04/2018
- * Descripcion: Procedimiento que actualiza el Estado del Ticket
+ * Descripcion: Procedimiento que actualiza la SubArea
  *  
  * Modificaciones:
  * <Quien modifico:> <Cuando modifico:> <Donde modifico:>
@@ -17,14 +17,15 @@
 
 DELIMITER //
 
- CREATE PROCEDURE actualizaEstatusTicket(	IN iIDEstado      INTEGER,
- 											IN cEstado    	  VARCHAR(150),
-											IN lActivo        TINYINT(1),
- 											IN cUsuario       VARCHAR(20),
-		 									OUT lError        TINYINT(1), 
-		 									OUT cSqlState     VARCHAR(50), 
-		 									OUT cError        VARCHAR(200))
- 	actualizaEstatusTicket:BEGIN
+ CREATE PROCEDURE actualizaSubArea      (	IN iiDArea      INTEGER,
+ 											IN iIDSubArea   INTEGER,
+											IN cSubArea		VARCHAR (150),
+											IN lActivo      TINYINT(1),
+ 											IN cUsuario     VARCHAR(20),
+		 									OUT lError      TINYINT(1), 
+		 									OUT cSqlState   VARCHAR(50), 
+		 									OUT cError      VARCHAR(200))
+ 	actualizaSubArea:BEGIN
      /*Manejo de Errores*/ 
 		DECLARE EXIT HANDLER FOR SQLEXCEPTION
 		BEGIN
@@ -63,66 +64,77 @@ DELIMITER //
 				THEN
 					SET lError = 1; 
 					SET cError = "El usuario del sistema no existe o no esta activo";
-					LEAVE actualizaEstatusTicket;
+					LEAVE actualizaSubArea;
 
 			END IF;
 
-			/*Verifica que la forma de solicitud exista con anterioridad*/
-			IF NOT EXISTS(SELECT * FROM ctEstatusTickets WHERE ctEstatusTickets.iIDEstado = iIDEstado)
+			IF NOT EXISTS(SELECT * FROM ctSubArea WHERE ctSubArea.iIDSubArea = iIDSubArea)
 
 				THEN 
 					SET lError = 1; 
-					SET cError = "Estado del ticket no encontrado";
-					LEAVE actualizaEstatusTicket;
+					SET cError = "Estado de subarea no encontrado";
+					LEAVE actualizaSubArea;
 
 			END IF;
 
 
 			/*Valida campos obligatotios como no nulos o vacios*/
-			IF iIDEstado = 0 OR iIDEstado = NULL 
+			
+			IF iIDArea = 0 OR iIDArea = NULL 
 
 				THEN 
 					SET lError = 1; 
-					SET cError = "El identificador de Estado no contiene valor";
-					LEAVE actualizaEstatusTicket;
+					SET cError = "El identificador de Área no contiene valor";
+					LEAVE actualizaSubArea;
 
 			END IF;
 
-            IF cEstado = "" OR cEstado = NULL 
+			IF iIDSubArea = 0 OR iIDSubArea = NULL 
 
 				THEN 
 					SET lError = 1; 
-					SET cError = "El campo Estado no contiene valor";
-					LEAVE actualizaEstatusTicket;
+					SET cError = "El identificador de SubArea no contiene valor";
+					LEAVE actualizaSubArea;
+
+			END IF;
+
+            IF cSubArea = "" OR cSubArea = NULL 
+
+				THEN 
+					SET lError = 1; 
+					SET cError = "El campo nombre de Subarea no contiene valor";
+					LEAVE actualizaSubArea;
 
 			END IF;
 
 			/*Valida campos obligatotios como no nulos o vacios*/
-            IF cUsuario = "" OR cUsuario = NULL 
-
-				THEN 
-					SET lError = 1; 
-					SET cError = "El usuario no contiene valor";
-					LEAVE actualizaEstatusTicket;
-
-			END IF;
-
+            
 			IF lActivo = 0 OR lActivo = NULL 
 
 				THEN 
 					SET lError = 1; 
 					SET cError = "Activo no contiene valor";
-					LEAVE actualizaEstatusTicket;
+					LEAVE actualizaSubArea;
+
+			END IF;
+
+			IF cUsuario = "" OR cUsuario = NULL 
+
+				THEN 
+					SET lError = 1; 
+					SET cError = "El usuario no contiene valor";
+					LEAVE actualizaSubArea;
 
 			END IF;
 
 			/*Realiza la actualizacion*/
-			UPDATE 	ctEstatusTickets
-					SET 	ctEstatusTickets.cEstado     	= cEstado,
-							ctEstatusTickets.lActivo        = lActivo,
-							ctEstatusTickets.dtModificado   = NOW(),
-							ctEstatusTickets.cUsuario       = cUsuario
-					WHERE 	ctEstatusTickets.iIDEstado 		= iIDEstado;
+			UPDATE 	ctSubArea
+					SET 	ctSubArea.cSubArea  	= cSubArea,
+							ctSubArea.lActivo       = lActivo,
+							ctSubArea.dtModificado  = NOW(),
+							ctSubArea.cUsuario      = cUsuario
+					WHERE 	ctSubArea.iIDArea = iIDArea AND 
+					ctSubArea.iIDSubArea = iIDSubArea;
 
 		COMMIT;
 

@@ -1,28 +1,29 @@
 /**
  * 
- * Autor: Alejandro Estrada
- * Fecha: 14/04/2018
- * Descripcion: 
+ * Autor: Jennifer Hernández
+ * Fecha: 28/04/2018
+ * Descripcion: Procedimiento que consulta todos los Resguardos
  *  
  * Modificaciones:
  * <Quien modifico:> <Cuando modifico:> <Donde modifico:>
- * Ejemplo: Bogar Chavez 06/09/2017 In-06 Fn-
+ * Ejemplo: Alejandro Estrada 09/09/2017 In-15 Fn-19 
  *
- * Nota: 0 es falso, 1 es verdadero
+ * Nota: 0 es falso, 1 es verdadero solo aplica para los campos logicos
+ * Nota: 0 es para inactivos, 1 para activos, 2 para ambos
  * 
  */
 
-USE SENADO;
- 
+ /*Para pruebas*/
+/*USE SENADO;*/
 
- /*Delimitador de bloque*/
+  /*Delimitador de bloque*/
  DELIMITER //
 
- CREATE PROCEDURE consultasrvsolicitados(IN iTipoConsulta INT(3),
- 										OUT lError       TINYINT(1), 
- 										OUT cSqlState    VARCHAR(50), 
- 										OUT cError       VARCHAR(200))
- 	consultasrvsolicitados:BEGIN
+ CREATE PROCEDURE consultaResguardos   (IN iTipoConsulta INT(3),
+										OUT lError       TINYINT(1), 
+										OUT cSqlState    VARCHAR(50), 
+										OUT cError       VARCHAR(200))
+ 	consultaResguardos:BEGIN
 
 		/*Manejo de Errores*/ 
 		DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -58,21 +59,21 @@ USE SENADO;
 			/*Crea una tabla temporal con la estructura de la tabla
 			 *especificada despues del LIKE
 			 */
-			DROP TEMPORARY TABLE IF EXISTS tt_ctServicioSolicitado;
+			DROP TEMPORARY TABLE IF EXISTS tt_ctResguardo;
 
-			CREATE TEMPORARY TABLE tt_ctServicioSolicitado LIKE ctServicioSolicitado;
+			CREATE TEMPORARY TABLE tt_ctResguardo LIKE ctResguardo;
 
 			/*Casos para el tipo de consulta*/
 			CASE iTipoConsulta
 
-			    WHEN 0 THEN INSERT INTO tt_ctServicioSolicitado SELECT * FROM ctServicioSolicitado WHERE ctServicioSolicitado.lActivo = 0;
-			    WHEN 1 THEN INSERT INTO tt_ctServicioSolicitado SELECT * FROM ctServicioSolicitado WHERE ctServicioSolicitado.lActivo = 1;
-			    WHEN 2 THEN INSERT INTO tt_ctServicioSolicitado SELECT * FROM ctServicioSolicitado;
+			    WHEN 0 THEN INSERT INTO tt_ctResguardo SELECT * FROM ctResguardo WHERE ctResguardo.lActivo = 0;
+			    WHEN 1 THEN INSERT INTO tt_ctResguardo SELECT * FROM ctResguardo WHERE ctResguardo.lActivo = 1;
+			    WHEN 2 THEN INSERT INTO tt_ctResguardo SELECT * FROM ctResguardo;
 
 			END CASE;
 
 			/*Resultado de las consultas anteriores*/
-			SELECT * FROM tt_ctServicioSolicitado;
+			SELECT * FROM tt_ctResguardo;
 
 		COMMIT;
 
