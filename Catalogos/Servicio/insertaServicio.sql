@@ -69,7 +69,6 @@ USE SENADO;
 					SET lError = 1; 
 					SET cError = "El Usuario no contiene valor";
 					LEAVE insertaServicio;
-
 			END IF;
 
 			/*Insercion del usuario*/

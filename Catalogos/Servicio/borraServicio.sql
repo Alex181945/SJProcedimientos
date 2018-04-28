@@ -20,7 +20,6 @@ USE SENADO;
 			SET cError    = CONCAT("Exepcion: ", @e2);
 			ROLLBACK;
 		END; 
-
 		/*Manejo de Advertencias*/ 
 		DECLARE EXIT HANDLER FOR SQLWARNING
 		BEGIN

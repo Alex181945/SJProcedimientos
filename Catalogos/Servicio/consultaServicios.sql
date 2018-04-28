@@ -55,7 +55,6 @@ USE SENADO;
 			    WHEN 2 THEN INSERT INTO tt_cttiposervicio SELECT * FROM cttiposervicio;
 
 			END CASE;
-
 			/*Resultado de las consultas anteriores*/
 			SELECT * FROM tt_cttiposervicio;
 
