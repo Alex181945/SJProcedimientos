@@ -68,10 +68,10 @@
 			END IF;
 						
 			/*Realiza el borrado logico solo se actualiza el campo lActivo*/
-			UPDATE ctEstatusTicket SET  ctEstatusTicket.lActivo        = 0,
-									    ctEstatusTicket.dtModificado   = NOW(),
-                						ctEstatusTicket.cUsuario       = cUsuario
-            WHERE ctEstatusTicket.iIDEstado = iIDEstado;
+			UPDATE ctEstatusTickets SET ctEstatusTickets.lActivo        = 0,
+									    ctEstatusTickets.dtModificado   = NOW(),
+                						ctEstatusTickets.cUsuario       = cUsuario
+            WHERE ctEstatusTickets.iIDEstado = iIDEstado;
 
 		COMMIT;
 

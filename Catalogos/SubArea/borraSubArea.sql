@@ -2,7 +2,7 @@
  * 
  * Autor: Jennifer Hernandez
  * Fecha: 28/04/2018
- * Descripcion: Procedimiento que consulta el Estado de Ticket
+ * Descripcion: Procedimiento que borra la Sub Área
  *  
  * Modificaciones:
  * <Quien modifico:> <Cuando modifico:> <Donde modifico:>
@@ -13,16 +13,17 @@
  */
 
  /*Para pruebas*/
-/*USE cau;*/
+/*USE SENADO;*/
 
-  /*Delimitador de bloque*/
+ /*Delimitador de bloque*/
  DELIMITER //
 
- CREATE PROCEDURE consultaUsuarios(	IN iTipoConsulta INT(3),
- 									OUT lError       TINYINT(1), 
- 									OUT cSqlState    VARCHAR(50), 
- 									OUT cError       VARCHAR(200))
- 	consultaUsuarios:BEGIN
+ CREATE PROCEDURE borraSubArea    (	IN iIDSubArea      INTEGER,
+			 						IN cUsuario       VARCHAR(50),
+			 						OUT lError        TINYINT(1), 
+			 						OUT cSqlState     VARCHAR(50), 
+			 						OUT cError        VARCHAR(200))
+ 	borraSubArea:BEGIN
 
 		/*Manejo de Errores*/ 
 		DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -55,24 +56,22 @@
 			SET cSqlState = "";
 			SET cError    = "";
 
-			/*Crea una tabla temporal con la estructura de la tabla
-			 *especificada despues del LIKE
-			 */
-			DROP TEMPORARY TABLE IF EXISTS tt_ctUsuario;
+			/*Valida el usuario que crea el registro*/
+			IF NOT EXISTS(SELECT * FROM ctUsuario WHERE ctUsuario.cUsuario = cUsuario
+													AND ctUsuario.lActivo  = 1)
 
-			CREATE TEMPORARY TABLE tt_ctUsuario LIKE ctUsuario;
+				THEN
+					SET lError = 1; 
+					SET cError = "El usuario del sistema no existe o no esta activo";
+					LEAVE borraSubArea;
 
-			/*Casos para el tipo de consulta*/
-			CASE iTipoConsulta
-
-			    WHEN 0 THEN INSERT INTO tt_ctUsuario SELECT * FROM ctUsuario WHERE ctUsuario.lActivo = 0;
-			    WHEN 1 THEN INSERT INTO tt_ctUsuario SELECT * FROM ctUsuario WHERE ctUsuario.lActivo = 1;
-			    WHEN 2 THEN INSERT INTO tt_ctUsuario SELECT * FROM ctUsuario;
-
-			END CASE;
-
-			/*Resultado de las consultas anteriores*/
-			SELECT * FROM tt_ctUsuario;
+			END IF;
+						
+			/*Realiza el borrado logico solo se actualiza el campo lActivo*/
+			UPDATE ctSubArea SET  ctSubArea.lActivo        = 0,
+								  ctSubArea.dtModificado   = NOW(),
+                				  ctSubArea.cUsuario       = cUsuario
+            WHERE ctSubArea.iIDSubArea = iIDSubArea;
 
 		COMMIT;
 

@@ -2,7 +2,7 @@
  * 
  * Autor: Jennifer Hernandez
  * Fecha: 28/04/2018
- * Descripcion: Procedimiento que consulta el Estado de Ticket
+ * Descripcion: Procedimiento que consulta las SubAreas
  *  
  * Modificaciones:
  * <Quien modifico:> <Cuando modifico:> <Donde modifico:>
@@ -18,11 +18,11 @@
   /*Delimitador de bloque*/
  DELIMITER //
 
- CREATE PROCEDURE consultaUsuarios(	IN iTipoConsulta INT(3),
+ CREATE PROCEDURE consultaSubAreas(	IN iTipoConsulta INT(3),
  									OUT lError       TINYINT(1), 
  									OUT cSqlState    VARCHAR(50), 
  									OUT cError       VARCHAR(200))
- 	consultaUsuarios:BEGIN
+ 	consultaSubAreas:BEGIN
 
 		/*Manejo de Errores*/ 
 		DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -58,21 +58,21 @@
 			/*Crea una tabla temporal con la estructura de la tabla
 			 *especificada despues del LIKE
 			 */
-			DROP TEMPORARY TABLE IF EXISTS tt_ctUsuario;
+			DROP TEMPORARY TABLE IF EXISTS tt_ctSubArea;
 
-			CREATE TEMPORARY TABLE tt_ctUsuario LIKE ctUsuario;
+			CREATE TEMPORARY TABLE tt_ctSubArea LIKE ctSubArea;
 
 			/*Casos para el tipo de consulta*/
 			CASE iTipoConsulta
 
-			    WHEN 0 THEN INSERT INTO tt_ctUsuario SELECT * FROM ctUsuario WHERE ctUsuario.lActivo = 0;
-			    WHEN 1 THEN INSERT INTO tt_ctUsuario SELECT * FROM ctUsuario WHERE ctUsuario.lActivo = 1;
-			    WHEN 2 THEN INSERT INTO tt_ctUsuario SELECT * FROM ctUsuario;
+			    WHEN 0 THEN INSERT INTO tt_ctSubArea SELECT * FROM ctSubArea WHERE ctSubArea.lActivo = 0;
+			    WHEN 1 THEN INSERT INTO tt_ctSubArea SELECT * FROM ctSubArea WHERE ctSubArea.lActivo = 1;
+			    WHEN 2 THEN INSERT INTO tt_ctSubArea SELECT * FROM ctSubArea;
 
 			END CASE;
 
 			/*Resultado de las consultas anteriores*/
-			SELECT * FROM tt_ctUsuario;
+			SELECT * FROM tt_ctSubArea;
 
 		COMMIT;
 

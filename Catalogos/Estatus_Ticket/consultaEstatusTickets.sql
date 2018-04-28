@@ -1,8 +1,8 @@
 /**
  * 
- * Autor: Alejandro Estrada
- * Fecha: 05/03/2018
- * Descripcion: Procedimiento que trae todos los usuarios
+ * Autor: Jennifer Hernández
+ * Fecha: 28/04/2018
+ * Descripcion: Procedimiento que consulta todos los usuarios
  *  
  * Modificaciones:
  * <Quien modifico:> <Cuando modifico:> <Donde modifico:>
@@ -20,9 +20,9 @@
  DELIMITER //
 
  CREATE PROCEDURE consultaEstatusTickets(	IN iTipoConsulta INT(3),
- 									OUT lError       TINYINT(1), 
- 									OUT cSqlState    VARCHAR(50), 
- 									OUT cError       VARCHAR(200))
+											OUT lError       TINYINT(1), 
+											OUT cSqlState    VARCHAR(50), 
+											OUT cError       VARCHAR(200))
  	consultaEstatusTickets:BEGIN
 
 		/*Manejo de Errores*/ 
@@ -59,21 +59,21 @@
 			/*Crea una tabla temporal con la estructura de la tabla
 			 *especificada despues del LIKE
 			 */
-			DROP TEMPORARY TABLE IF EXISTS tt_ctEstatusTicket;
+			DROP TEMPORARY TABLE IF EXISTS tt_ctEstatusTickets;
 
-			CREATE TEMPORARY TABLE tt_ctEstatusTicket LIKE ctEstatusTicket;
+			CREATE TEMPORARY TABLE tt_ctEstatusTickets LIKE ctEstatusTickets;
 
 			/*Casos para el tipo de consulta*/
 			CASE iTipoConsulta
 
-			    WHEN 0 THEN INSERT INTO tt_ctEstatusTicket SELECT * FROM ctEstatusTicket WHERE ctEstatusTicket.lActivo = 0;
-			    WHEN 1 THEN INSERT INTO tt_ctEstatusTicket SELECT * FROM ctEstatusTicket WHERE ctEstatusTicket.lActivo = 1;
-			    WHEN 2 THEN INSERT INTO tt_ctEstatusTicket SELECT * FROM ctEstatusTicket;
+			    WHEN 0 THEN INSERT INTO tt_ctEstatusTickets SELECT * FROM ctEstatusTickets WHERE ctEstatusTickets.lActivo = 0;
+			    WHEN 1 THEN INSERT INTO tt_ctEstatusTickets SELECT * FROM ctEstatusTickets WHERE ctEstatusTickets.lActivo = 1;
+			    WHEN 2 THEN INSERT INTO tt_ctEstatusTickets SELECT * FROM ctEstatusTickets;
 
 			END CASE;
 
 			/*Resultado de las consultas anteriores*/
-			SELECT * FROM tt_ctEstatusTicket;
+			SELECT * FROM tt_ctEstatusTickets;
 
 		COMMIT;
 

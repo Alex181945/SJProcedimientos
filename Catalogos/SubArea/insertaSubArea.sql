@@ -16,7 +16,7 @@
 
 DELIMITER //
 
- CREATE PROCEDURE insertaEstatusTicket(	    IN cEstado VARCHAR(150),	                                        
+ CREATE PROCEDURE insertaSubArea(	        IN cSubArea VARCHAR(150),	                                        
 	                                        IN cUsuario VARCHAR(50),
                                             OUT lError     TINYINT(1), 
                                             OUT cSqlState  VARCHAR(50), 
@@ -24,7 +24,7 @@ DELIMITER //
  								            )
 
  	/*Nombre del Procedimiento*/
- 	insertaEstatusTicket:BEGIN
+ 	insertaSubArea:BEGIN
 
      /*Manejo de Errores*/ 
 		DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -65,46 +65,47 @@ DELIMITER //
 				THEN
 					SET lError = 1; 
 					SET cError = "El usuario del sistema no existe o no esta activo";
-					LEAVE insertaEstatusTicket;
+					LEAVE insertaSubArea;
 
 			END IF;
 
 			
-			IF cEstado = "" OR cEstado = NULL 
+			IF cSubArea = "" OR cSubArea = NULL 
 
 				THEN 
 					SET lError = 1; 
-					SET cError = "El campo Estado no contiene valor";
-					LEAVE insertaEstatusTicket;
+					SET cError = "El campo de Subarea no contiene valor";
+					LEAVE insertaSubArea;
 
 			END IF;
 
 			/*Valida campos obligatotios como no nulos o vacios*/
+            
+            IF lActivo = 0 OR lActivo = NULL 
+
+				THEN 
+					SET lError = 1; 
+					SET cError = "Activo no contiene valor";
+					LEAVE insertaSubArea;
+
+			END IF;
+
             IF cUsuario = "" OR cUsuario = NULL 
 
 				THEN 
 					SET lError = 1; 
 					SET cError = "El usuario no contiene valor";
-					LEAVE insertaEstatusTicket;
-
-			END IF;
-			
-			IF lActivo = 0 OR lActivo = NULL 
-
-				THEN 
-					SET lError = 1; 
-					SET cError = "Activo no contiene valor";
-					LEAVE insertaEstatusTicket;
+					LEAVE insertaSubArea;
 
 			END IF;
            
 
 			/*Insercion del usuario*/
-			INSERT INTO ctEstatusTickets (ctEstatusTickets.cEstado,
-                                        ctEstatusTickets.lActivo,
-									    ctEstatusTickets.dtCreado, 
-									    ctEstatusTickets.cUsuario) 
-						      VALUES   (cEstado,
+			INSERT INTO ctSubArea (ctSubArea.cSubArea,
+                                        ctSubArea.lActivo,
+									    ctSubArea.dtCreado, 
+									    ctSubArea.cUsuario) 
+						      VALUES   (cSubArea,
 									    1,
 									    NOW(),
 									    cUsuario);

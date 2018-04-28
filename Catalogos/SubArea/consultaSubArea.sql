@@ -2,7 +2,7 @@
  * 
  * Autor: Jennifer Hernandez
  * Fecha: 28/04/2018
- * Descripcion: Procedimiento que consulta el Estado de Ticket
+ * Descripcion: Procedimiento que consulta la Sub Area
  *  
  * Modificaciones:
  * <Quien modifico:> <Cuando modifico:> <Donde modifico:>
@@ -17,14 +17,14 @@
 
 DELIMITER //
 
- CREATE PROCEDURE consultaEstatusTicket (   IN iIDEstado   INTEGER,
-                                            OUT lError     TINYINT(1), 
-                                            OUT cSqlState  VARCHAR(50), 
-                                            OUT cError     VARCHAR(200)
- 								        )
+ CREATE PROCEDURE consultaSubArea ( IN  iIDSubArea   INTEGER,
+                                    OUT lError     TINYINT(1), 
+                                    OUT cSqlState  VARCHAR(50), 
+                                    OUT cError     VARCHAR(200)
+ 							      )
 
  	/*Nombre del Procedimiento*/
- 	consultaEstatusTicket:BEGIN
+ 	consultaSubArea:BEGIN
 
      /*Manejo de Errores*/ 
 		DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -61,33 +61,33 @@ DELIMITER //
 			IF NOT EXISTS(SELECT * FROM ctUsuario WHERE ctUsuario.cUsuario = cUsuario
 													AND ctUsuario.lActivo  = 1)
         
-            DROP TEMPORARY  TABLE IF EXISTS tt_ctEstatusTickets;
-			CREATE TEMPORARY TABLE tt_ctEstatusTickets LIKE ctEstatusTickets;
+            DROP TEMPORARY  TABLE IF EXISTS tt_ctSubArea;
+			CREATE TEMPORARY TABLE tt_ctSubArea LIKE ctSubArea;
 
-			IF EXISTS(SELECT * FROM ctEstatusTickets WHERE ctEstatusTickets.iIDEstado = iIDEstado)
+			IF EXISTS(SELECT * FROM ctSubArea WHERE ctSubArea.iIDSubArea = iIDSubArea)
 
 				/*Si existe copia toda la informacion del usuario a la tabla temporal*/
-				THEN INSERT INTO tt_ctEstatusTickets SELECT * FROM ctEstatusTickets WHERE ctEstatusTickets.iIDEstado = iIDEstado;
+				THEN INSERT INTO tt_ctSubArea SELECT * FROM ctSubArea WHERE ctSubArea.iIDSubArea = iIDSubArea;
 
 				/*Si no manda error de que no lo encontro*/
 				ELSE 
 					SET lError = 1; 
-					SET cError = "No hay información respecto al Estado del Ticket";
-					LEAVE consultaEstatusTicket;
+					SET cError = "No hay información respecto a la subarea";
+					LEAVE consultaSubArea;
 
 			END IF;
 
 			/*Valida que el ticket este activo*/
-			IF NOT EXISTS(SELECT * FROM tt_ctEstatusTickets WHERE tt_ctEstatusTickets.lActivo = 1)
+			IF NOT EXISTS(SELECT * FROM tt_ctSubArea WHERE tt_ctSubArea.lActivo = 1)
 
 				THEN 
 					SET lError = 1; 
-					SET cError = "Estado de activo no activo";
-					LEAVE consultaEstatusTicket;
+					SET cError = "No activo";
+					LEAVE consultaSubArea;
 
 			END IF;
 
-			SELECT * FROM tt_ctEstatusTickets;
+			SELECT * FROM tt_ctSubArea;
 
 		COMMIT;
 
