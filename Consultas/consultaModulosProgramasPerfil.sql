@@ -79,7 +79,8 @@
 					WHERE ctModulos.iIDModulo = ctModuloPerfil.iIDModulo AND ctModulos.lActivo = 1) as cModulo, 
 				ctProgramasModulo.iPartida, 
 				ctProgramasModulo.cPrograma, 
-				ctProgramasModulo.cRuta, 
+				ctProgramasModulo.cRuta,
+				ctProgramasModulo.cCExtra, 
 				ctProgramasModulo.lActivo 
 			FROM ctModuloPerfil INNER JOIN ctProgramasModulo 
 				ON ctModuloPerfil.iIDModulo = ctProgramasModulo.iIDModulo AND ctProgramasModulo.lActivo = 1
