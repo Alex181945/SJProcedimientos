@@ -61,7 +61,7 @@
 			 */
 			DROP TEMPORARY TABLE IF EXISTS tt_ctEdificios;
 
-			CREATE TEMPORARY TABLE tt_ctEdificios LIKE ctEdificio;
+			CREATE TEMPORARY TABLE tt_ctEdificios LIKE ctEdificios;
 
 			/*Comprueba si existe el Edif*/
 			IF EXISTS(SELECT * FROM ctEdificios WHERE ctEdificios.iIDEdificio = iIDEdificio)
