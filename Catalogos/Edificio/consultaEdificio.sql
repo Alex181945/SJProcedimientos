@@ -13,8 +13,8 @@
  */
  
  /*Para pruebas*/
- /*USE SENADO;
- DROP PROCEDURE IF EXISTS `consultaEdificio`;*/
+ USE SENADO;
+ DROP PROCEDURE IF EXISTS `consultaEdificio`;
 
  /*Delimitador de bloque*/
  DELIMITER //
@@ -78,14 +78,14 @@
 			END IF;
 
 			/*Valida que el edificio este activo*/
-			IF NOT EXISTS(SELECT * FROM tt_ctEdificios WHERE tt_ctEdificios.lActivo = 1)
+			/*IF NOT EXISTS(SELECT * FROM tt_ctEdificios WHERE tt_ctEdificios.lActivo = 1)
 
 				THEN 
 					SET lError = 1; 
 					SET cError = "Edificio no activo";
 					LEAVE consultaEdificio;
 
-			END IF;
+			END IF;*/
 
 			SELECT * FROM tt_ctEdificios;
 
