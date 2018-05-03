@@ -20,7 +20,7 @@
  DELIMITER //
 
  CREATE PROCEDURE borraEdificio(IN iIDEdificio  INTEGER(11),
- 								IN cUsuario     VARCHAR(20),
+ 								IN cUsuario     VARCHAR(50),
  								OUT lError      TINYINT(1), 
  								OUT cSqlState   VARCHAR(50), 
  								OUT cError      VARCHAR(200))
@@ -58,7 +58,7 @@
 			SET cError    = "";
 
 			/*Valida que el edificio exista*/
-			IF NOT EXISTS(SELECT * FROM ctEdificio WHERE ctEdificio.iIDEdificio = iIDEdificio)
+			IF NOT EXISTS(SELECT * FROM ctEdificios WHERE ctEdificios.iIDEdificio = iIDEdificio)
 
 				THEN 
 					SET lError = 1; 
@@ -68,8 +68,8 @@
 			END IF;
 
 			/*Valida que el edificio no este activo*/
-			IF NOT EXISTS(SELECT * FROM ctEdificio WHERE ctEdificio.iIDEdificio = iIDEdificio 
-													AND  ctEdificio.lActivo     = 1)
+			IF NOT EXISTS(SELECT * FROM ctEdificios WHERE ctEdificios.iIDEdificio = iIDEdificio 
+													AND  ctEdificios.lActivo     = 1)
 
 				THEN 
 					SET lError = 1; 
