@@ -3,7 +3,7 @@
  /*Delimitador de bloque*/
  DELIMITER //
 
- CREATE PROCEDURE consultaServicio(	IN cTipoServicio  VARCHAR(20),
+ CREATE PROCEDURE consultaServicio(	IN iIDTipoServicio INTEGER,
  									OUT lError TINYINT(1), 
  									OUT cSqlState VARCHAR(50), 
  									OUT cError VARCHAR(200))
@@ -48,10 +48,10 @@
 			CREATE TEMPORARY TABLE tt_ctTipoServicio LIKE ctTipoServicio;
 
 			/*Comprueba si existe el servicio*/
-			IF EXISTS(SELECT * FROM ctTipoServicio WHERE ctTipoServicio.cTipoServicio = cTipoServicio)
+			IF EXISTS(SELECT * FROM ctTipoServicio WHERE ctTipoServicio.iIDTipoServicio = iIDTipoServicio)
 
 				/*Si existe copia toda la informacion del servicio a la tabla temporal*/
-				THEN INSERT INTO tt_ctTipoServicio SELECT * FROM ctTipoServicio WHERE ctTipoServicio.cTipoServicio = cTipoServicio;
+				THEN INSERT INTO tt_ctTipoServicio SELECT * FROM ctTipoServicio WHERE ctTipoServicio.iIDTipoServicio = iIDTipoServicio;
 
 				/*Si no manda error de que no lo encontro*/
 				ELSE 

@@ -1,29 +1,13 @@
-/**
- * 
- * Autor: Jennifer Hernández
- * Fecha: 28/04/2018
- * Descripcion: Procedimiento que consulta todos los Resguardos
- *  
- * Modificaciones:
- * <Quien modifico:> <Cuando modifico:> <Donde modifico:>
- * Ejemplo: Alejandro Estrada 09/09/2017 In-15 Fn-19 
- *
- * Nota: 0 es falso, 1 es verdadero solo aplica para los campos logicos
- * Nota: 0 es para inactivos, 1 para activos, 2 para ambos
- * 
- */
-
- /*Para pruebas*/
- USE SENADO;
+/*USE SENADO;*/
 
   /*Delimitador de bloque*/
  DELIMITER //
 
- CREATE PROCEDURE consultaResguardos   (IN iTipoConsulta INT(3),
-										OUT lError       TINYINT(1), 
-										OUT cSqlState    VARCHAR(50), 
-										OUT cError       VARCHAR(200))
- 	consultaResguardos:BEGIN
+ CREATE PROCEDURE consultaPerfiles(IN iTipoConsulta INT(3),
+ 									OUT lError       TINYINT(1), 
+ 									OUT cSqlState    VARCHAR(50), 
+ 									OUT cError       VARCHAR(200))
+ 	consultaPerfiles:BEGIN
 
 		/*Manejo de Errores*/ 
 		DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -59,21 +43,20 @@
 			/*Crea una tabla temporal con la estructura de la tabla
 			 *especificada despues del LIKE
 			 */
-			DROP TEMPORARY TABLE IF EXISTS tt_ctResguardo;
+			DROP TEMPORARY TABLE IF EXISTS tt_ctPerfil;
 
-			CREATE TEMPORARY TABLE tt_ctResguardo LIKE ctResguardo;
+			CREATE TEMPORARY TABLE tt_ctPerfil LIKE ctPerfil;
 
 			/*Casos para el tipo de consulta*/
 			CASE iTipoConsulta
 
-			    WHEN 0 THEN INSERT INTO tt_ctResguardo SELECT * FROM ctResguardo WHERE ctResguardo.lActivo = 0;
-			    WHEN 1 THEN INSERT INTO tt_ctResguardo SELECT * FROM ctResguardo WHERE ctResguardo.lActivo = 1;
-			    WHEN 2 THEN INSERT INTO tt_ctResguardo SELECT * FROM ctResguardo;
+			    WHEN 0 THEN INSERT INTO tt_ctPerfil SELECT * FROM ctPerfil WHERE ctPerfil.lActivo = 0;
+			    WHEN 1 THEN INSERT INTO tt_ctPerfil SELECT * FROM ctPerfil WHERE ctPerfil.lActivo = 1;
+			    WHEN 2 THEN INSERT INTO tt_ctPerfil SELECT * FROM ctPerfil;
 
 			END CASE;
-
 			/*Resultado de las consultas anteriores*/
-			SELECT * FROM tt_ctResguardo;
+			SELECT * FROM tt_ctPerfil;
 
 		COMMIT;
 

@@ -15,7 +15,7 @@
  /*Delimitador de bloque*/
  DELIMITER //
 
- CREATE PROCEDURE borraCriticidad(IN cCriticidad  VARCHAR(20),
+ CREATE PROCEDURE borraCriticidad(IN cCriticidad  VARCHAR,
  								OUT lError TINYINT(1), 
  								OUT cSqlState VARCHAR(50), 
  								OUT cError VARCHAR(200))
@@ -53,7 +53,7 @@
 			SET cError    = "";
 
 			/*Valida que el edificio exista*/
-			IF NOT EXISTS(SELECT * FROM ctCriticidad WHERE ctCriticidad.cCriticidad = cCriticidad)
+			IF NOT EXISTS(SELECT * FROM ctCriticidad WHERE ctCriticidad.iIDCriticidad = iIDCriticidad)
 
 				THEN 
 					SET lError = 1; 
@@ -73,9 +73,7 @@
 
 			END IF;
 
-			/*Realiza el borrado logico que es una llamada al procedimiento actualizaEdificio*/
-			CALL actualizaEdificio();
-
+			
 		COMMIT;
 
 	END;//

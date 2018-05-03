@@ -1,11 +1,11 @@
  /*Delimitador de bloque*/
  DELIMITER //
 
- CREATE PROCEDURE consultaBienesMateriales(	IN iIDBienesMateriales INTEGER(11),
+ CREATE PROCEDURE consultaBienMaterial(	IN iIDBienesMateriales INTEGER(11),
  									        OUT lError TINYINT(1), 
  									        OUT cSqlState VARCHAR(50), 
  									        OUT cError VARCHAR(200))
- 	consultaBienesMateriales:BEGIN
+ 	consultaBienMaterial:BEGIN
 
 		/*Manejo de Errores*/ 
 		DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -40,7 +40,7 @@
 
 			DROP TEMPORARY TABLE IF EXISTS tt_ctBienesMateriales;
 
-			CREATE TEMPORARY TABLE tt_ctBienesMateriales LIKE iIDBienesMateriales;
+			CREATE TEMPORARY TABLE tt_ctBienesMateriales LIKE ctBienesMateriales;
 
 			/*Comprueba si existe el bienMaterial*/
 			IF EXISTS(SELECT * FROM ctBienesMateriales WHERE ctBienesMateriales.iIDBienesMateriales = iIDBienesMateriales)
@@ -52,7 +52,7 @@
 				ELSE 
 					SET lError = 1; 
 					SET cError = "El Bien Material no existe";
-					LEAVE consultaBienesMateriales;
+					LEAVE consultaBienMaterial;
 
 			END IF;
 
@@ -61,8 +61,8 @@
 
 				THEN 
 					SET lError = 1; 
-					SET cError = "Bien Material deshabilitado";
-					LEAVE consultaBienesMateriales;
+					SET cError = "Bien Material no activo";
+					LEAVE consultaBienMaterial;
 
 			END IF;
 

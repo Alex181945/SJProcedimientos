@@ -1,15 +1,14 @@
 
-/*USE Senado;*/
+USE Senado;
 
  DELIMITER //
 
- CREATE PROCEDURE actualizaBienesMateriales(	IN iIDBienesMateriales INTEGER(11),
- 												IN iIDEdificio         INTEGER(11),
+ CREATE PROCEDURE actualizaBienMaterial(	IN iIDEdificio         INTEGER,
  												IN cPiso               VARCHAR(10),
 	 									        IN cOficina            VARCHAR(100),
-	 									        IN cResguardante       VARCHAR(50),
-	 									        IN iIDArea             INTEGER(11),
- 									        	IN iIDSubArea          INTEGER(11),
+										        IN iIDArea             INTEGER,
+ 									        	IN iIDSubArea          INTEGER,
+												IN cResguardante       VARCHAR(50),
 	 									        IN cResponsable        VARCHAR(50),
 	 									        IN cFactura            VARCHAR(100),
 	 									        IN cObs                TEXT,
@@ -19,7 +18,7 @@
 	 									        OUT cSqlState          VARCHAR(50), 
 	 									        OUT cError             VARCHAR(200)
  								        )
- 	actualizaBienesMateriales:BEGIN
+ 	actualizaBienMaterial:BEGIN
 
 		/*Manejo de Errores*/ 
 		DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -58,19 +57,26 @@
 				THEN 
 					SET lError = 1; 
 					SET cError = "El Bien material no existe";
-					LEAVE actualizaBienesMateriales;
+					LEAVE actualizaBienMaterial;
 
 			END IF;
 
 			/*Valida campos obligatotios como no nulos o vacios*/
-			
+			IF iIDBienesMateriales = 0 OR iIDBienesMateriales = NULL 
+
+				THEN 
+					SET lError = 1; 
+					SET cError = "El identificador de Bienes Materiales no contiene valor";
+					LEAVE actualizaBienMaterial;
+
+			END IF;
 
 			IF iIDEdificio = 0 OR iIDEdificio = NULL 
 
 				THEN 
 					SET lError = 1; 
 					SET cError = "El edificio no contiene valor";
-					LEAVE actualizaBienesMateriales;
+					LEAVE actualizaBienMaterial;
 
 			END IF;
 
@@ -80,7 +86,7 @@
 				THEN 
 					SET lError = 1; 
 					SET cError = "El piso no contiene valor";
-					LEAVE actualizaBienesMateriales;
+					LEAVE actualizaBienMaterial;
 
 			END IF;
 
@@ -89,7 +95,7 @@
 				THEN 
 					SET lError = 1; 
 					SET cError = "La oficina no contiene valor";
-					LEAVE actualizaBienesMateriales;
+					LEAVE actualizaBienMaterial;
 
 			END IF;
 
@@ -98,7 +104,7 @@
 				THEN 
 					SET lError = 1; 
 					SET cError = "El area no contiene valor";
-					LEAVE actualizaBienesMateriales;
+					LEAVE actualizaBienMaterial;
 
 			END IF;
 
@@ -107,7 +113,7 @@
 				THEN 
 					SET lError = 1; 
 					SET cError = "La sub-area no contiene valor";
-					LEAVE actualizaBienesMateriales;
+					LEAVE actualizaBienMaterial;
 
 			END IF;
 
@@ -116,7 +122,7 @@
 				THEN 
 					SET lError = 1; 
 					SET cError = "El resguardante no contiene valor";
-					LEAVE actualizaBienesMateriales;
+					LEAVE actualizaBienMaterial;
 					
 
 			END IF;
@@ -126,7 +132,7 @@
 				THEN 
 					SET lError = 1; 
 					SET cError = "El responsable no contiene valor";
-					LEAVE actualizaBienesMateriales;
+					LEAVE actualizaBienMaterial;
 
 			END IF;
 
@@ -135,7 +141,25 @@
 				THEN 
 					SET lError = 1; 
 					SET cError = "Factura no contiene valor";
-					LEAVE actualizaBienesMateriales;
+					LEAVE actualizaBienMaterial;
+
+			END IF;
+
+			IF cObs = "" OR cObs = NULL 
+
+				THEN 
+					SET lError = 1; 
+					SET cError = "El campo de observaciones no contiene valor";
+					LEAVE actualizaBienMaterial;
+
+			END IF;
+
+			IF lActivo = 0 OR lActivo = NULL 
+
+				THEN 
+					SET lError = 1; 
+					SET cError = "Activo no contiene valor";
+					LEAVE actualizaBienMaterial;
 
 			END IF;
 
@@ -144,7 +168,7 @@
 				THEN 
 					SET lError = 1; 
 					SET cError = "Usuario no contiene valor";
-					LEAVE actualizaBienesMateriales;
+					LEAVE actualizaBienMaterial;
 
 			END IF;
 
@@ -160,9 +184,11 @@
 					ctBienesMateriales.cFactura         = cFactura,
 					ctBienesMateriales.cObs             = cObs,
 					ctBienesMateriales.lActivo          = lActivo,
-                    ctBienesMateriales.cUsuario         = cUsuario,
-                    ctBienesMateriales.dtModificado     = NOW()
-				WHERE ctBienesMateriales.iIDBienesMateriales   = iIDBienesMateriales;
+					ctBienesMateriales.dtModificado     = NOW(),
+					ctBienesMateriales.lActivo 			= 1,
+                    ctBienesMateriales.cUsuario         = cUsuario
+					
+                    WHERE ctBienesMateriales.iIDBienesMateriales   = iIDBienesMateriales;
 
 		COMMIT;
 

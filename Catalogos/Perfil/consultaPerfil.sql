@@ -1,8 +1,9 @@
 /**
  * 
  * Autor: Jennifer Hernandez
- * Fecha: 28/04/2018
- * Descripcion: Procedimiento que consulta la Sub Area
+ * Fecha: 25/03/2018
+ * Descripcion: Procedimiento que consulta el registro
+ * de una forma de solicitud
  *  
  * Modificaciones:
  * <Quien modifico:> <Cuando modifico:> <Donde modifico:>
@@ -13,19 +14,18 @@
  */
 
  /*Para pruebas*/
-/*USE cau;*/
+/*USE SENADO;*/
 
 DELIMITER //
 
- CREATE PROCEDURE consultaSubArea ( IN  iIDSubArea   INTEGER,
-									IN lActivo TINYINT (1),
-                                    OUT lError     TINYINT(1), 
-                                    OUT cSqlState  VARCHAR(50), 
-                                    OUT cError     VARCHAR(200)
- 							      )
+ CREATE PROCEDURE consultaPerfil(IN iPerfil INTEGER,
+                                OUT lError     TINYINT(1), 
+                                OUT cSqlState  VARCHAR(50), 
+                                OUT cError     VARCHAR(200)
+ 				                )
 
  	/*Nombre del Procedimiento*/
- 	consultaSubArea:BEGIN
+ 	consultaPerfil:BEGIN
 
      /*Manejo de Errores*/ 
 		DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -57,36 +57,35 @@ DELIMITER //
 			SET lError    = 0;
 			SET cSqlState = "";
 			SET cError    = "";
+        
+       
+            DROP TEMPORARY  TABLE IF EXISTS tt_ctPerfil;
+			CREATE TEMPORARY TABLE tt_ctPerfil LIKE ctPerfil;
 
-            /*INICIO DEL PROCEDIMIENTO*/
-			
-            DROP TEMPORARY  TABLE IF EXISTS tt_ctSubArea;
-			CREATE TEMPORARY TABLE tt_ctSubArea LIKE ctSubArea;
-
-			IF EXISTS(SELECT * FROM ctSubArea WHERE ctSubArea.iIDSubArea = iIDSubArea)
+			IF EXISTS(SELECT * FROM ctPerfil WHERE ctPerfil.iPerfil = iPerfil)
 
 				/*Si existe copia toda la informacion del usuario a la tabla temporal*/
-				THEN INSERT INTO tt_ctSubArea SELECT * FROM ctSubArea WHERE ctSubArea.iIDSubArea = iIDSubArea;
+				THEN INSERT INTO tt_ctPerfil SELECT * FROM ctPerfil WHERE ctPerfil.iPerfil = iPerfil;
 
 				/*Si no manda error de que no lo encontro*/
 				ELSE 
 					SET lError = 1; 
-					SET cError = "No hay información respecto a la subarea";
-					LEAVE consultaSubArea;
+					SET cError = "No hay información respecto a la consulta de perfil";
+					LEAVE consultaPerfil;
 
 			END IF;
 
 			/*Valida que el ticket este activo*/
-			IF NOT EXISTS(SELECT * FROM tt_ctSubArea WHERE tt_ctSubArea.lActivo = 1)
+			IF NOT EXISTS(SELECT * FROM tt_ctPerfil WHERE tt_ctPerfil.lActivo = 1)
 
 				THEN 
 					SET lError = 1; 
-					SET cError = "No activo";
-					LEAVE consultaSubArea;
+					SET cError = "Perfil no activo";
+					LEAVE consultaPerfil;
 
 			END IF;
 
-			SELECT * FROM tt_ctSubArea;
+			SELECT * FROM tt_ctPerfil;
 
 		COMMIT;
 

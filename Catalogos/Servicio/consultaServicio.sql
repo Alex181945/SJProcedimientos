@@ -3,7 +3,7 @@ USE SENADO;
  /*Delimitador de bloque*/
  DELIMITER //
 
- CREATE PROCEDURE consultaServicio(	IN iIDTipoServicio  VARCHAR(20),
+ CREATE PROCEDURE consultaServicio(	IN iIDTipoServicio INTEGER,
  									OUT lError TINYINT(1), 
  									OUT cSqlState VARCHAR(50), 
  									OUT cError VARCHAR(200))

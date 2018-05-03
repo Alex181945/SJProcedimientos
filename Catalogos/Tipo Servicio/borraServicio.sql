@@ -4,7 +4,7 @@
  /*Delimitador de bloque*/
  DELIMITER //
 
- CREATE PROCEDURE borraServicio(IN iIDTipoServicio INTEGER (11),
+ CREATE PROCEDURE borraServicio(IN iIDTipoServicio INTEGER,
 	 							IN cTipoServicio  VARCHAR(20),
  								OUT lError TINYINT(1), 
  								OUT cSqlState VARCHAR(50), 
@@ -42,7 +42,17 @@
 			SET cSqlState = "";
 			SET cError    = "";
 
+			/*Valida el usuario que crea el registro*/
+			IF NOT EXISTS(SELECT * FROM ctUsuario WHERE ctUsuario.cUsuario = cUsuario
+													AND ctUsuario.lActivo  = 1)
 
+				THEN
+					SET lError = 1; 
+					SET cError = "El usuario del sistema no existe o no esta activo";
+					LEAVE borraArea;
+
+			END IF;
+			
 			/*Valida que el tipo de servicio exista*/
 			IF NOT EXISTS(SELECT * FROM ctTipoServicio WHERE ctTipoServicio.iIDTipoServicio = iIDTipoServicio)
 
@@ -68,7 +78,7 @@
 			UPDATE ctTipoServicio SET 
 				ctTipoServicio.lActivo       = 0,
 				ctTipoServicio.dtModificado  = NOW(),
-				iIDTipoServicio.cUsuario = cUsuario,
+				ctTipoServicio.cUsuario      = cUsuario
 			 WHERE ctTipoServicio.iIDTipoServicio   = iIDTipoServicio;
 
 		COMMIT;

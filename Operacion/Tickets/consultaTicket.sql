@@ -62,7 +62,8 @@ consultaResguardo:BEGIN
 							THEN 
 								SET lError = 1; 
 								SET cError = "Resguardo no disponible"; 
-			                   LEAVE consultaResguardo;
+			                    /*El resguardo no esta habilitado*/
+								LEAVE consultaResguardo;
 
 			END IF;
 

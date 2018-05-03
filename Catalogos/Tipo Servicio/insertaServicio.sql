@@ -44,7 +44,7 @@
 
 
 			/*Verifica que el servicio a crear no exista con anterioridad*/
-			IF EXISTS(SELECT * FROM ctTipoServicio WHERE ctTipoServicio.cTipoServicio = cTipoServicio)
+			IF EXISTS(SELECT * FROM ctTipoServicio WHERE ctTipoServicio.iIDTipoServicio = iIDTipoServicio)
 
 				THEN 
 					SET lError = 1; 
@@ -54,6 +54,15 @@
 			END IF;
 
 			/*Valida campos obligatotios como no nulos o vacios*/
+			IF iIDTipoServicio = 0 OR iIDTipoServicio = NULL 
+
+				THEN 
+					SET lError = 1; 
+					SET cError = "Activo no contiene valor";
+					LEAVE insertaServicio;
+
+			END IF;
+
 			IF cTipoServicio = "" OR cTipoServicio = NULL 
 
 				THEN 
@@ -68,6 +77,15 @@
 				THEN 
 					SET lError = 1; 
 					SET cError = "El Usuario no contiene valor";
+					LEAVE insertaServicio;
+
+			END IF;
+
+			IF lActivo = 0 OR lActivo = NULL 
+
+				THEN 
+					SET lError = 1; 
+					SET cError = "Activo no contiene valor";
 					LEAVE insertaServicio;
 
 			END IF;

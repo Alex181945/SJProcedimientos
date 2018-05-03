@@ -1,10 +1,9 @@
-
-/*USE Senado;*/
+USE Senado;
 
  DELIMITER //
 
- CREATE PROCEDURE borraResguardo(	IN iIDResguardo  VARCHAR(20),
- 									IN cUsuario      VARCHAR(20),
+ CREATE PROCEDURE borraResguardo(	IN iIDResguardo  INTEGER,
+ 									IN cUsuario      VARCHAR(50),
 	 								OUT lError       TINYINT(1), 
 	 								OUT cSqlState    VARCHAR(50), 
 	 								OUT cError       VARCHAR(200))
@@ -65,7 +64,6 @@
 			/*Realiza el borrado logico solo se actualiza el campo lActivo*/
 			UPDATE ctResguardo SET  ctResguardo.lActivo        = 0,
 									ctResguardo.cUsuario	   = cUsuario,
-									ctResguardo.lActivo        = lActivo,
 									ctResguardo.dtModificado   = NOW() 
 								WHERE ctResguardo.iIDResguardo = iIDResguardo;
 

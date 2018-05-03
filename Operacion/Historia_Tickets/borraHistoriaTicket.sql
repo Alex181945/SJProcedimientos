@@ -1,13 +1,13 @@
- 
- /*USE Senado;
+USE Senado;
 
  DELIMITER //
 
- CREATE PROCEDURE borraHistoriaTicket(	IN iIDTicket  INTEGER,
-                                    	IN iPartida INTEGER,
-		 								OUT lError TINYINT(1), 
+ CREATE PROCEDURE borraHistoriaTicket(	IN iIDTicket INTEGER,
+                                    	IN iPartida  INTEGER,
+										IN cUsuario  VARCHAR(50),
+		 								OUT lError   TINYINT(1), 
 		 								OUT cSqlState VARCHAR(50), 
-		 								OUT cError VARCHAR(200))
+		 								OUT cError    VARCHAR(200))
  	borraHistoriaTicket:BEGIN
 
 		DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -36,26 +36,22 @@
 			SET cSqlState = "";
 			SET cError    = "";
 
-			IF NOT EXISTS(SELECT * FROM opHistoriaTicket WHERE opHistoriaTicket.iIDTicket = iIDTicket)
+			/*Valida el usuario que crea el registro*/
+			IF NOT EXISTS(SELECT * FROM ctUsuario WHERE ctUsuario.cUsuario = cUsuario
+													AND ctUsuario.lActivo  = 1)
 
-				THEN 
+				THEN
 					SET lError = 1; 
-					SET cError = "El ticket no existe";
+					SET cError = "El usuario del sistema no existe o no esta activo";
 					LEAVE borraHistoriaTicket;
 
 			END IF;
-
-			IF NOT EXISTS(SELECT * FROM opHistoriaTicket WHERE opHistoriaTicket.iIDTicket = iIDTicket 
-													AND opHistoriaTicket.lActivo  = 1)
-
-				THEN 
-					SET lError = 1; 
-					SET cError = "El resguardo ya fue borrado con anterioridad";
-					LEAVE borraHistoriaTicket;
-
-			END IF;
-
-			UPDATE opHistoriaTicket SET opHistoriaTicket.lActivo = 0 WHERE opHistoriaTicket.iIDTicket = iIDTicket;
+						
+			/*Realiza el borrado logico solo se actualiza el campo lActivo*/
+			UPDATE opHistoriaTicket SET opHistoriaTicket.lActivo        = 0,
+									    opHistoriaTicket.dtModificado   = NOW(),
+                						opHistoriaTicket.cUsuario       = cUsuario
+            WHERE opHistoriaTicket.iIDTicket = iIDTicket;
 
 		COMMIT;
 

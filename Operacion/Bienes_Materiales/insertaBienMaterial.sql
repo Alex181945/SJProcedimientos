@@ -3,23 +3,23 @@
 
 DELIMITER //
 
- CREATE PROCEDURE insertaBienesMateriales(	IN iIDEdificio      INTEGER(11),
- 											IN cPiso            VARCHAR(10),
- 									        IN cOficina         VARCHAR(100),
- 									        IN iIDArea          INTEGER(11),
- 									        IN iIDSubArea       INTEGER(11),
- 									        IN cResguardante    VARCHAR(50),
- 									        IN cResponsable     VARCHAR(50),
- 									        IN cFactura         VARCHAR(100),
- 									        IN cObs             TEXT,
- 									        IN cUsuario         VARCHAR(50),
- 									        OUT lError     TINYINT(1), 
- 									        OUT cSqlState  VARCHAR(50), 
- 									        OUT cError     VARCHAR(200)
+ CREATE PROCEDURE insertaBienMaterial(	IN iIDEdificio      INTEGER,
+	 									IN cPiso            VARCHAR(10),
+ 									    IN cOficina         VARCHAR(100),
+ 									    IN iIDArea          INTEGER,
+ 									    IN iIDSubArea       INTEGER,
+ 									    IN cResguardante    VARCHAR(50),
+ 									    IN cResponsable     VARCHAR(50),
+ 									    IN cFactura         VARCHAR(100),
+ 									    IN cObs             TEXT,
+ 									    IN cUsuario         VARCHAR(50),
+ 									    OUT lError     TINYINT(1), 
+ 									    OUT cSqlState  VARCHAR(50), 
+ 								        OUT cError     VARCHAR(200)
  								        )
 
  	/*Nombre del Procedimiento*/
- 	insertaBienesMateriales:BEGIN
+ 	insertaBienMaterial:BEGIN
 
 		/*Manejo de Errores*/ 
 		DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -50,23 +50,53 @@ DELIMITER //
 			SET cSqlState = "";
 			SET cError    = "";
 
+			/*Valida el usuario que crea el registro*/
+			IF NOT EXISTS(SELECT * FROM ctUsuario WHERE ctUsuario.cUsuario = cUsuario
+													AND ctUsuario.lActivo  = 1)
+
+				THEN
+					SET lError = 1; 
+					SET cError = "El usuario del sistema no existe o no esta activo";
+					LEAVE insertaBienMaterial;
+					
+			END IF;
+
 			/*Verifica que el resguardo a crear no exista con anterioridad*/
 			IF EXISTS(SELECT * FROM ctBienesMateriales WHERE ctBienesMateriales.iIDBienesMateriales = iIDBienesMateriales)
 
 				THEN 
 					SET lError = 1; 
-					SET cError = "El resguardo Bien Material ya existe";
-					LEAVE insertaBienesMateriales;
+					SET cError = "El Bien Material ya existe";
+					LEAVE insertaBienMaterial;
+
+			END IF;
+
+			IF NOT EXISTS(SELECT * FROM ctBienesMateriales WHERE ctBienesMateriales.iIDBienesMateriales = iIDBienesMateriales
+													AND ctBienesMateriales.lActivo  = 1)
+
+				THEN
+					SET lError = 1; 
+					SET cError = "No esta activo";
+					LEAVE insertaBienMaterial;
 
 			END IF;
 
 			/*Valida campos obligatotios como no nulos o vacios*/
+			IF iIDBienesMateriales = 0 OR iIDBienesMateriales = NULL 
+
+				THEN 
+					SET lError = 1; 
+					SET cError = "El identificador de Bienes Materiales no contiene valor";
+					LEAVE insertaBienMaterial;
+
+			END IF;
+
 			IF iIDEdificio = 0 OR iIDEdificio = NULL 
 
 				THEN 
 					SET lError = 1; 
-					SET cError = "El edificio no contiene valor";
-					LEAVE insertaBienesMateriales;
+					SET cError = "El identificador de edificio no contiene valor";
+					LEAVE insertaBienMaterial;
 
 			END IF;
 
@@ -76,7 +106,7 @@ DELIMITER //
 				THEN 
 					SET lError = 1; 
 					SET cError = "El piso no contiene valor";
-					LEAVE insertaBienesMateriales;
+					LEAVE insertaBienMaterial;
 
 			END IF;
 
@@ -85,7 +115,7 @@ DELIMITER //
 				THEN 
 					SET lError = 1; 
 					SET cError = "La oficina no contiene valor";
-					LEAVE insertaBienesMateriales;
+					LEAVE insertaBienMaterial;
 
 			END IF;
 
@@ -94,7 +124,7 @@ DELIMITER //
 				THEN 
 					SET lError = 1; 
 					SET cError = "El area no contiene valor";
-					LEAVE insertaBienesMateriales;
+					LEAVE insertaBienMaterial;
 
 			END IF;
 
@@ -103,7 +133,7 @@ DELIMITER //
 				THEN 
 					SET lError = 1; 
 					SET cError = "La sub-area no contiene valor";
-					LEAVE insertaBienesMateriales;
+					LEAVE insertaBienMaterial;
 
 			END IF;
 
@@ -112,7 +142,7 @@ DELIMITER //
 				THEN 
 					SET lError = 1; 
 					SET cError = "El resguardante no contiene valor";
-					LEAVE insertaBienesMateriales;
+					LEAVE insertaBienMaterial;
 					
 
 			END IF;
@@ -122,7 +152,7 @@ DELIMITER //
 				THEN 
 					SET lError = 1; 
 					SET cError = "El responsable no contiene valor";
-					LEAVE insertaBienesMateriales;
+					LEAVE insertaBienMaterial;
 
 			END IF;
 
@@ -131,7 +161,16 @@ DELIMITER //
 				THEN 
 					SET lError = 1; 
 					SET cError = "Factura no contiene valor";
-					LEAVE insertaBienesMateriales;
+					LEAVE insertaBienMaterial;
+
+			END IF;
+
+			IF lActivo = 0 OR lActivo = NULL 
+
+				THEN 
+					SET lError = 1; 
+					SET cError ="Activo no contiene valor";
+					LEAVE insertaBienMaterial;
 
 			END IF;
 
@@ -140,14 +179,13 @@ DELIMITER //
 				THEN 
 					SET lError = 1; 
 					SET cError = "Usuario no contiene valor";
-					LEAVE insertaBienesMateriales;
+					LEAVE insertaBienMaterial;
 
 			END IF;
 
 
 			/*Insercion del usuario*/
-			INSERT INTO ctBienesMateriales (ctBienesMateriales.iIDBienesMateriales, 
-									ctBienesMateriales.iIDEdificio, 
+			INSERT INTO ctBienesMateriales (ctBienesMateriales.iIDEdificio, 
 									ctBienesMateriales.cPiso, 
 									ctBienesMateriales.cOficina, 
 									ctBienesMateriales.iIDArea, 
@@ -159,8 +197,7 @@ DELIMITER //
 									ctBienesMateriales.dtCreado, 
 									ctBienesMateriales.lActivo,
                                     ctBienesMateriales.cUsuario) 
-						VALUES	(	iIDBienesMateriales,
-									iIDEdificio,
+						VALUES	(	iIDEdificio,
 									cPiso,
 									cOficina,
 									iIDArea,

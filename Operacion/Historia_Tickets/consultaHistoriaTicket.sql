@@ -45,9 +45,9 @@
 			/*Crea una tabla temporal con la estructura de la tabla
 			 *especificada despues del LIKE
 			 */
-			
+			DROP TEMPORARY TABLE IF EXISTS tt_opHistoriaTicket;
 
-			CREATE TEMPORARY TABLE tt_opHistoriaTicket LIKE pHistoriaTicket;
+			CREATE TEMPORARY TABLE tt_opHistoriaTicket LIKE opHistoriaTicket;
 
 			/*Comprueba si existe el ticket*/
 			IF EXISTS(SELECT * FROM opHistoriaTicket WHERE opHistoriaTicket.iIDTicket = iIDTicket
@@ -55,7 +55,7 @@
 
 				/*Si existe copia toda la informacion del usuario a la tabla temporal*/
 				THEN INSERT INTO tt_opHistoriaTicket SELECT * FROM opHistoriaTicket 
-					WHERE opHistoriaTicket.iIDTicket = iIDTicket AND opHistoriaTicket.iPartida = iPartida;
+					WHERE opHistoriaTicket.iIDTicket = iIDTicket AND opHistoriaTicket.lActivo = lActivo;
 
 				/*Si no manda error de que no lo encontro*/
 				ELSE 

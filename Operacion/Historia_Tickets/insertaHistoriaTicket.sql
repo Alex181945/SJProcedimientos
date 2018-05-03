@@ -1,10 +1,10 @@
-/* USE Senado;*/
+USE Senado;
 
  /*Delimitador de bloque*/
  DELIMITER //
 
- CREATE PROCEDURE insertaHistoriaTicket(	IN iIDTicket    INTEGER(11),
- 											IN cCampoMod    VARCHAR(150),
+ CREATE PROCEDURE insertaHistoriaTicket(	IN iPartida INTEGER,
+	 										IN cCampoMod    VARCHAR(150),
  									        IN cValorViejo  VARCHAR(150),
  									        IN cValorNuevo  VARCHAR(150),
  		 									IN cObs         TEXT,
@@ -58,7 +58,7 @@
 
 			END IF;
 
-			IF NOT EXISTS(SELECT * FROM opTicket WHERE opTicket.iIDTicket = iIDTicket)
+			IF NOT EXISTS(SELECT * FROM opHistoriaTicket WHERE opHistoriaTicket.iIDTicket = iIDTicket)
 
 				THEN
 					SET lError = 1; 
@@ -117,22 +117,22 @@
 
 			
 			/*Insercion del resguardo*/
-			INSERT INTO opHistoriaTicket (	opHistoriaTicket.iIDTicket,
-											opHistoriaTicket.iPartida, 
+			INSERT INTO opHistoriaTicket (  opHistoriaTicket.iPartida, 
 											opHistoriaTicket.cCampoMod, 
 											opHistoriaTicket.cValorViejo, 
 											opHistoriaTicket.cValorNuevo, 
 											opHistoriaTicket.cObs, 
 											opHistoriaTicket.dtFecha,
-											opHistoriaTicket.cUsuario) 
-								VALUES	(	iIDTicket,
-											iPartida,
+											opHistoriaTicket.cUsuario,
+											opHistoriaTicket.lActivo) 
+								VALUES	(	iPartida,
 											cCampoMod,
 											cValorViejo,
 											cValorNuevo,
 											cObs,
 		                                    NOW(),
-											cUsuario);
+											cUsuario,
+											1);
 
 		COMMIT;
 

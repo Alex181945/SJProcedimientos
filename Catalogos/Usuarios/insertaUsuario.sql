@@ -18,7 +18,7 @@
  DELIMITER //
 
  CREATE PROCEDURE insertaUsuario(	IN cUsuario    VARCHAR(50),
- 									IN cContrasena VARCHAR(30),
+ 									IN cContrasena VARCHAR(150),
  									IN cNombre     VARCHAR(150),
  									IN cPaterno    VARCHAR(150),
  									IN cMaterno    VARCHAR(150),

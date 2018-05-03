@@ -19,11 +19,11 @@
   /*Delimitador de bloque*/
  DELIMITER //
 
- CREATE PROCEDURE consultaBienesMateriales  (IN iTipoConsulta INT(3),
+ CREATE PROCEDURE consultaHistoriaTickets  (IN iTipoConsulta INT(3),
 											OUT lError       TINYINT(1), 
 											OUT cSqlState    VARCHAR(50), 
 											OUT cError       VARCHAR(200))
- 	consultaBienesMateriales:BEGIN
+ 	consultaHistoriaTickets:BEGIN
 
 		/*Manejo de Errores*/ 
 		DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -59,21 +59,21 @@
 			/*Crea una tabla temporal con la estructura de la tabla
 			 *especificada despues del LIKE
 			 */
-			DROP TEMPORARY TABLE IF EXISTS tt_ctBienesMateriales;
+			DROP TEMPORARY TABLE IF EXISTS tt_opHistoriaTicket;
 
-			CREATE TEMPORARY TABLE tt_ctBienesMateriales LIKE ctBienesMateriales;
+			CREATE TEMPORARY TABLE tt_opHistoriaTicket LIKE opHistoriaTicket;
 
 			/*Casos para el tipo de consulta*/
 			CASE iTipoConsulta
 
-			    WHEN 0 THEN INSERT INTO tt_ctBienesMateriales SELECT * FROM ctBienesMateriales WHERE ctBienesMateriales.lActivo = 0;
-			    WHEN 1 THEN INSERT INTO tt_ctBienesMateriales SELECT * FROM ctBienesMateriales WHERE ctBienesMateriales.lActivo = 1;
-			    WHEN 2 THEN INSERT INTO tt_ctBienesMateriales SELECT * FROM ctBienesMateriales;
+			    WHEN 0 THEN INSERT INTO tt_opHistoriaTicket SELECT * FROM opHistoriaTicket WHERE opHistoriaTicket.lActivo = 0;
+			    WHEN 1 THEN INSERT INTO tt_opHistoriaTicket SELECT * FROM opHistoriaTicket WHERE opHistoriaTicket.lActivo = 1;
+			    WHEN 2 THEN INSERT INTO tt_opHistoriaTicket SELECT * FROM opHistoriaTicket;
 
 			END CASE;
 
 			/*Resultado de las consultas anteriores*/
-			SELECT * FROM tt_ctBienesMateriales;
+			SELECT * FROM tt_opHistoriaTicket;
 
 		COMMIT;
 

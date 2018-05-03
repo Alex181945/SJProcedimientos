@@ -66,6 +66,15 @@
 
 			END IF;
 
+			IF lActivo = 0 OR lActivo = NULL 
+
+				THEN 
+					SET lError = 1; 
+					SET cError = "Activo no contiene valor";
+					LEAVE actualizaCriticidad;
+
+			END IF;
+
 			IF cUsuario = "" OR cUsuario = NULL
 
 				THEN 

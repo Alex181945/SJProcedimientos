@@ -1,7 +1,7 @@
 /**
  * Autor: Jennifer Hernandez
  * Fecha: 28/04/2018
- * Descripcion: Procedimiento que inserta el Estado de Ticket
+ * Descripcion: Procedimiento que inserta perfil
  *  
  * Modificaciones:
  * <Quien modifico:> <Cuando modifico:> <Donde modifico:>
@@ -16,15 +16,15 @@
 
 DELIMITER //
 
- CREATE PROCEDURE insertaEstatusTicket(	    IN cEstado VARCHAR(150),	                                        
-	                                        IN cUsuario VARCHAR(50),
-                                            OUT lError     TINYINT(1), 
-                                            OUT cSqlState  VARCHAR(50), 
-                                            OUT cError     VARCHAR(200)
- 								            )
+ CREATE PROCEDURE insertaPerfil(IN cPerfil VARCHAR(100),	                                        
+	                            IN cUsuario VARCHAR(50),
+                                OUT lError     TINYINT(1), 
+                                OUT cSqlState  VARCHAR(50), 
+                                OUT cError     VARCHAR(200)
+ 				               )
 
  	/*Nombre del Procedimiento*/
- 	insertaEstatusTicket:BEGIN
+ 	insertaPerfil:BEGIN
 
      /*Manejo de Errores*/ 
 		DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -65,35 +65,44 @@ DELIMITER //
 				THEN
 					SET lError = 1; 
 					SET cError = "El usuario del sistema no existe o no esta activo";
-					LEAVE insertaEstatusTicket;
+					LEAVE insertaPerfil;
 
 			END IF;
 
-			IF EXISTS(SELECT * FROM ctEstatusTickets WHERE ctEstatusTickets.iIDEstado = iIDEstado)
-
-				THEN 
-					SET lError = 1; 
-					SET cError = "El área ya existe";
-					LEAVE insertaEstatusTicket;
-
-			END IF;
-
-			IF NOT EXISTS(SELECT * FROM ctEstatusTickets WHERE ctEstatusTickets.iIDEstado = iIDEstado
-													AND ctEstatusTickets.lActivo  = 1)
+			IF NOT EXISTS(SELECT * FROM ctPerfil WHERE ctPerfil.iPerfil = iPerfil
+													AND ctPerfil.lActivo  = 1)
 
 				THEN
 					SET lError = 1; 
-					SET cError = "El área del sistema no existe o no esta activo";
-					LEAVE insertaEstatusTicket;
+					SET cError = "El perfil no existe o no esta activo";
+					LEAVE insertaPerfil;
 
 			END IF;
 
-			IF cEstado = "" OR cEstado = NULL 
+			IF iPerfil = 0 OR iPerfil = NULL 
 
 				THEN 
 					SET lError = 1; 
-					SET cError = "El campo Estado no contiene valor";
-					LEAVE insertaEstatusTicket;
+					SET cError = "El identificador de perfil no contiene valor";
+					LEAVE insertaPerfil;
+
+			END IF;
+
+			IF cPerfil = "" OR cPerfil = NULL 
+
+				THEN 
+					SET lError = 1; 
+					SET cError = "El campo Perfil no contiene valor";
+					LEAVE insertaPerfil;
+
+			END IF;
+
+            IF lActivo = 0 OR lActivo = NULL 
+
+				THEN 
+					SET lError = 1; 
+					SET cError = "Activo no contiene valor";
+					LEAVE insertaPerfil;
 
 			END IF;
 
@@ -103,26 +112,16 @@ DELIMITER //
 				THEN 
 					SET lError = 1; 
 					SET cError = "El usuario no contiene valor";
-					LEAVE insertaEstatusTicket;
+					LEAVE insertaPerfil;
 
-			END IF;
-			
-			IF lActivo = 0 OR lActivo = NULL 
-
-				THEN 
-					SET lError = 1; 
-					SET cError = "Activo no contiene valor";
-					LEAVE insertaEstatusTicket;
-
-			END IF;
-           
+			END IF;      
 
 			/*Insercion del usuario*/
-			INSERT INTO ctEstatusTickets (ctEstatusTickets.cEstado,
-                                        ctEstatusTickets.lActivo,
-									    ctEstatusTickets.dtCreado, 
-									    ctEstatusTickets.cUsuario) 
-						      VALUES   (cEstado,
+			INSERT INTO ctPerfil (ctPerfil.cPerfil,
+                                        ctPerfil.lActivo,
+									    ctPerfil.dtCreado, 
+									    ctPerfil.cUsuario) 
+						      VALUES   (cPerfil,
 									    1,
 									    NOW(),
 									    cUsuario);

@@ -56,7 +56,17 @@ CREATE PROCEDURE insertaArea(
 			SET cSqlState = "";
 			SET cError    = "";
 
+			/*Valida el usuario que crea el registro*/
+			IF NOT EXISTS(SELECT * FROM ctUsuario WHERE ctUsuario.cUsuario = cUsuario
+													AND ctUsuario.lActivo  = 1)
 
+				THEN
+					SET lError = 1; 
+					SET cError = "El usuario del sistema no existe o no esta activo";
+					LEAVE insertaArea;
+					
+			END IF;
+			
 			/*Verifica que el area no exista con anterioridad*/
 			IF EXISTS(SELECT * FROM ctAreas WHERE ctAreas.cArea = cArea)
 
@@ -79,6 +89,15 @@ CREATE PROCEDURE insertaArea(
 
 
 			/*Se valida que los dato no se encunetre nulos o vacios respecto a la tabla*/
+			IF iIDArea = 0 OR iIDArea = NULL 
+
+				THEN 
+					SET lError = 1; 
+					SET cError = "El identificador de area no contiene valor";
+					LEAVE insertaArea;
+
+			END IF;
+
 			IF cArea = "" OR cArea = NULL
 
 				THEN 
@@ -88,11 +107,20 @@ CREATE PROCEDURE insertaArea(
 
 			END IF;
 
+			IF lActivo = 0 OR lActivo = NULL 
+
+				THEN 
+					SET lError = 1; 
+					SET cError = "Activo no contiene valor";
+					LEAVE insertaArea;
+
+			END IF;
+
 			IF cUsuario = "" OR cUsuario = NULL
 
 				THEN 
 					SET lError = 1;
-					SET cError = "El dato calle Usuario contiene un valor";
+					SET cError = "El dato Usuario no contiene un valor";
 					LEAVE insertaArea;
 			END IF;
 

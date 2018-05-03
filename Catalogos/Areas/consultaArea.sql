@@ -18,7 +18,7 @@
  /*Delimitador de bloque*/
  DELIMITER //
 
- CREATE PROCEDURE consultaArea(	IN iIDArea INTEGER(11),
+ CREATE PROCEDURE consultaArea(	IN iIDArea INTEGER,
  								OUT lError TINYINT(1), 
  								OUT cSqlState VARCHAR(50), 
  								OUT cError VARCHAR(200))

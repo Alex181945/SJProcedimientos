@@ -4,13 +4,16 @@ USE Senado;
  /*Delimitador de bloque*/
  DELIMITER //
 
- CREATE PROCEDURE insertaResguardo(	IN cPiso            VARCHAR(10),
+ CREATE PROCEDURE insertaResguardo(	IN iIDEdificio      INTEGER,
+	 								IN cPiso            VARCHAR(10),
  									IN cOficina         VARCHAR(100),
+									IN iIDArea          INTEGER,
+ 									IN iIDSubArea       INTEGER,
  									IN cResguardante    VARCHAR(50),
  									IN cResponsable     VARCHAR(50),
  									IN cFactura         VARCHAR(100),
  									IN cObs             TEXT,
-                                    IN cUsuario         VARCHAR(20),
+                                    IN cUsuario         VARCHAR(50),
  									IN lActivo          TINYINT(1),
  									OUT lError          TINYINT(1), 
  									OUT cSqlState       VARCHAR(50), 
@@ -61,16 +64,25 @@ USE Senado;
 			
 
 			/*Valida campos obligatotios como no nulos o vacios*/
-			IF cUsuario = "" OR cUsuario = NULL 
+			IF iIDResguardo = 0 OR iIDResguardo = NULL 
 
 				THEN 
 					SET lError = 1; 
-					SET cError = "El usuario no contiene valor";
+					SET cError = "El identificador de Resguardo no contiene valor";
 					LEAVE insertaResguardo;
 
 			END IF;
 
-            IF cPiso = "" OR cPiso = NULL 
+			IF iIDEdificio = 0 OR iIDEdificio = NULL 
+
+				THEN 
+					SET lError = 1; 
+					SET cError = "El identificador de Edificio no contiene valor";
+					LEAVE insertaResguardo;
+
+			END IF;
+
+			IF cPiso = "" OR cPiso = NULL 
 
 				THEN 
 					SET lError = 1; 
@@ -84,6 +96,24 @@ USE Senado;
 				THEN 
 					SET lError = 1; 
 					SET cError = "EL campo oficina no cuenta con algún valor";
+					LEAVE insertaResguardo;
+
+			END IF;
+
+			IF iIDArea = 0 OR iIDArea = NULL 
+
+				THEN 
+					SET lError = 1; 
+					SET cError = "El identificador de Area no contiene valor";
+					LEAVE insertaResguardo;
+
+			END IF;
+
+			IF iIDSubArea = 0 OR iIDSubArea = NULL 
+
+				THEN 
+					SET lError = 1; 
+					SET cError = "El identificador de Edificio no contiene valor";
 					LEAVE insertaResguardo;
 
 			END IF;
@@ -116,6 +146,24 @@ USE Senado;
 
 			END IF;
 
+			IF cUsuario = "" OR cUsuario = NULL 
+
+				THEN 
+					SET lError = 1; 
+					SET cError = "El usuario no contiene valor";
+					LEAVE insertaResguardo;
+
+			END IF;
+
+			IF lActivo = 0 OR lActivo = NULL 
+
+				THEN 
+					SET lError = 1; 
+					SET cError = "Activo no contiene valor";
+					LEAVE insertaResguardo;
+
+			END IF;
+
 			/*Validacion de las claves foraneas*//*Aqui tengo duda :c*/
 			IF NOT EXISTS(SELECT * FROM ctPerfil WHERE ctPerfil.iPerfil  = iPerfil
 												AND ctPerfil.lActivo = 1 )
@@ -128,25 +176,31 @@ USE Senado;
 			END IF;
 
 			/*Insercion del resguardo*/
-			INSERT INTO ctResguardo (	ctResguardo.cPiso, 
-									ctResguardo.cOficina, 
+			INSERT INTO ctResguardo (ctResguardo.iIDEdificio,
+									ctResguardo.cPiso, 
+									ctResguardo.cOficina,
+									ctResguardo.iIDArea,
+									ctResguardo.iIDSubArea, 
 									ctResguardo.cResguardante, 
 									ctResguardo.cResponsable, 
 									ctResguardo.cFactura, 
 									ctResguardo.cObs, 
-                                    ctResguardo.cUsuario,
-									ctResguardo.lActivo, 
-									ctResguardo.dtCreado) 
-						VALUES	(	cPiso,
+                                    ctResguardo.dtCreado,
+									ctResguardo.cUsuario,
+									ctResguardo.lActivo) 
+									
+						VALUES	(	iIDEdificio,
+									cPiso,
 									cOficina,
+									iIDArea,
+									iIDSubArea,
 									cResguardante,
 									cResponsable,
 									cFactura,
 									cObs,
+									NOW(),
                                     cUsuario,
-									1,
-									NOW());
-
+									1);
 		COMMIT;
 
 	END;//

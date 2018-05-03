@@ -1,30 +1,29 @@
 /**
  * 
- * Autor: Bogar Chavez
- * Fecha: 13/03/2018
- * Descripcion: Procedimiento que borra el registro
- * de un usuario
+ * Autor: Jennifer Hernandez
+ * Fecha: 28/04/2018
+ * Descripcion: Procedimiento que borra el Estado del Ticket
  *  
  * Modificaciones:
  * <Quien modifico:> <Cuando modifico:> <Donde modifico:>
- *
+ * Ejemplo: Alejandro Estrada 09/09/2017 In-15 Fn-19 
  *
  * Nota: 0 es falso, 1 es verdadero
- * Nota: Este procedimiento no borra areas unicamente los
- * inhabilita
+ * 
  */
 
  /*Para pruebas*/
- USE SENADO;
+USE SENADO;
 
  /*Delimitador de bloque*/
  DELIMITER //
-CREATE PROCEDURE borraArea( IN iIDArea    INTEGER,
-	 						IN cUsuario   VARCHAR(20),
- 							OUT lError    TINYINT(1), 
- 							OUT cSqlState VARCHAR(50), 
- 							OUT cError    VARCHAR(200))	 
-	borraArea:BEGIN
+
+ CREATE PROCEDURE borraPerfil    (	IN iPerfil      INTEGER,
+			 						IN cUsuario       VARCHAR(50),
+			 						OUT lError        TINYINT(1), 
+			 						OUT cSqlState     VARCHAR(50), 
+			 						OUT cError        VARCHAR(200))
+ 	borraPerfil:BEGIN
 
 		/*Manejo de Errores*/ 
 		DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -64,36 +63,36 @@ CREATE PROCEDURE borraArea( IN iIDArea    INTEGER,
 				THEN
 					SET lError = 1; 
 					SET cError = "El usuario del sistema no existe o no esta activo";
-					LEAVE borraArea;
+					LEAVE borraPerfil;
 
 			END IF;
 
-			IF NOT EXISTS(SELECT * FROM ctAreas WHERE ctAreas.iIDArea = iIDArea)
+			IF NOT EXISTS(SELECT * FROM ctPerfil WHERE ctPerfil.iPerfil = iPerfil)
 
 				THEN 
 					SET lError = 1; 
-					SET cError = "Area no existe";
-					LEAVE borraArea;
+					SET cError = "Perfil no existe";
+					LEAVE borraPerfil;
 
 			END IF;
-
+			
 			/*Valida que el usuario no este activo*/
-			IF NOT EXISTS(SELECT * FROM ctAreas WHERE ctAreas.iIDArea = iIDArea 
-												AND ctAreas.lActivo  = 1)
+			IF NOT EXISTS(SELECT * FROM ctPerfil WHERE ctPerfil.iPerfil = iPerfil 
+												AND ctPerfil.lActivo  = 1)
 
 				THEN 
 					SET lError = 1; 
-					SET cError = "Área ya fue borrado con anterioridad";
-					LEAVE borraArea;
+					SET cError = "Perfil ya fue borrado con anterioridad";
+					LEAVE borraPerfil;
 
 			END IF;
-
+						
 			/*Realiza el borrado logico solo se actualiza el campo lActivo*/
-			UPDATE ctAreas SET
-				ctAreas.lActivo       = 0,
-				ctAreas.dtModificado  = NOW(),
-				ctAreas.cUsuario      = cUsuario 
-			WHERE ctAreas.iIDArea = iIDArea;
+			UPDATE ctPerfil 
+							SET ctPerfil.lActivo        = 0,
+						    ctPerfil.dtModificado   = NOW(),
+                			ctPerfil.cUsuario       = cUsuario
+            WHERE ctPerfil.iPerfil = iPerfil;
 
 		COMMIT;
 

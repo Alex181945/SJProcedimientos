@@ -1,16 +1,17 @@
-
-/*USE Senado;*/
+USE Senado;
 
 DELIMITER //
 
- CREATE PROCEDURE actualizaResguardo(	IN iIDResguardo     INTEGER(11),
- 										IN cPiso            VARCHAR(10),
+ CREATE PROCEDURE actualizaResguardo(	IN iIDEdificio      INTEGER,
+	 									IN cPiso            VARCHAR(10),
 	 									IN cOficina         VARCHAR(100),
+										IN iIDArea 			INTEGER,
+										IN iIDSubArea		INTEGER,
 	 									IN cResguardante    VARCHAR(50),
 	 									IN cResponsable     VARCHAR(50),
 	 									IN cFactura         VARCHAR(100),
 	 									IN cObs             TEXT,
-	                                    IN cUsuario         VARCHAR(20),
+	                                    IN cUsuario         VARCHAR(50),
 	 									IN lActivo          TINYINT(1),
 	 									OUT lError          TINYINT(1), 
 	 									OUT cSqlState       VARCHAR(50), 
@@ -59,6 +60,24 @@ DELIMITER //
 			END IF;
 
 			/*Valida campos obligatotios como no nulos o vacios*/
+			IF iIDResguardo = 0  OR iIDResguardo = NULL 
+
+				THEN 
+					SET lError = 1; 
+					SET cError = "El identiicador de Resguardo no contiene valor";
+					LEAVE actualizaResguardo;
+
+			END IF;
+
+			IF iIDEdificio = 0  OR iIDEdificio = NULL 
+
+				THEN 
+					SET lError = 1; 
+					SET cError = "El identiicador de Edificio no contiene valor";
+					LEAVE actualizaResguardo;
+
+			END IF;
+
 			IF cPiso = "" OR cPiso = NULL 
 
 				THEN 
@@ -73,6 +92,24 @@ DELIMITER //
 				THEN 
 					SET lError = 1; 
 					SET cError = "EL campo oficina no cuenta con algún valor";
+					LEAVE actualizaResguardo;
+
+			END IF;
+
+			IF iIDArea = 0  OR iIDArea = NULL 
+
+				THEN 
+					SET lError = 1; 
+					SET cError = "El identiicador de Area no contiene valor";
+					LEAVE actualizaResguardo;
+
+			END IF;
+
+			IF iIDSubArea = 0  OR iIDSubArea = NULL 
+
+				THEN 
+					SET lError = 1; 
+					SET cError = "El identiicador de subarea no contiene valor";
 					LEAVE actualizaResguardo;
 
 			END IF;
@@ -104,6 +141,16 @@ DELIMITER //
 					LEAVE actualizaResguardo;
 
 			END IF;
+
+			IF cObs = "" OR cObs = NULL 
+
+				THEN 
+					SET lError = 1; 
+					SET cError = "El campo de observaciones no contiene valor";
+					LEAVE actualizaResguardo;
+
+			END IF;
+
 			IF cUsuario = "" OR cUsuario = NULL 
 
 				THEN 
@@ -126,16 +173,19 @@ DELIMITER //
 
 			/*Realiza la actualizacion*/
 			UPDATE ctResguardo
-				SET ctResguardo.cPiso              = cPiso,
+				SET ctResguardo.iIDEdificio        = iIDEdificio,
+					ctResguardo.cPiso              = cPiso,
 					ctResguardo.cOficina           = cOficina,
+					ctResguardo.iIDArea        	   = iIDArea,
+					ctResguardo.iIDSubArea         = iIDSubArea,
 					ctResguardo.cResguardante      = cResguardante,
 					ctResguardo.cResponsable       = cResponsable,
 					ctResguardo.cFactura           = cFactura,
 					ctResguardo.cObs               = cObs,
+					ctResguardo.dtModificado       = NOW(),
 					ctResguardo.cUsuario		   = cUsuario,
-					ctResguardo.lActivo            = lActivo,
-					ctResguardo.dtModificado       = NOW()
-				WHERE ctResguardo.iIDResguardo     = iIDResguardo;
+					ctResguardo.lActivo            = lActivo
+					WHERE ctResguardo.iIDResguardo = iIDResguardo;
 
 		COMMIT;
 

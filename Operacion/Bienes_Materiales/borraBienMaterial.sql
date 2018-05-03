@@ -4,12 +4,12 @@
 /*Delimitador de bloque*/
  DELIMITER //
 
- CREATE PROCEDURE borraBienesMateriales(IN iIDBienesMateriales INTEGER(11),
+ CREATE PROCEDURE borraBienMaterial(IN iIDBienesMateriales INTEGER(11),
  										IN cUsuario            VARCHAR(50),
 		 								OUT lError             TINYINT(1), 
 		 								OUT cSqlState          VARCHAR(50), 
 		 								OUT cError             VARCHAR(200))
- 	borraBienesMateriales:BEGIN
+ 	borraBienMaterial:BEGIN
 
 		/*Manejo de Errores*/ 
 		DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -48,7 +48,7 @@
 				THEN 
 					SET lError = 1; 
 					SET cError = "El bien material no existe";
-					LEAVE borraBienesMateriales;
+					LEAVE borraBienMaterial;
 
 			END IF;
 
@@ -59,7 +59,7 @@
 				THEN 
 					SET lError = 1; 
 					SET cError = "El registro ya fue borrado con anterioridad";
-					LEAVE borraBienesMateriales;
+					LEAVE borraBienMaterial;
 
 			END IF;
 
