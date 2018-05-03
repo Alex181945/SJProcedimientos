@@ -14,8 +14,8 @@
  */
 
  /*Para pruebas*/
- USE SENADO;
- DROP PROCEDURE IF EXISTS `actualizaEdificio`;
+ /*USE SENADO;
+ DROP PROCEDURE IF EXISTS `actualizaEdificio`;*/
 
  /*Delimitador de bloque*/
  DELIMITER //

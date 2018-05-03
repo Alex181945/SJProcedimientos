@@ -13,8 +13,8 @@
  */
  
  /*Para pruebas*/
- USE SENADO;
- DROP PROCEDURE IF EXISTS `consultaEdificio`;
+ /*USE SENADO;
+ DROP PROCEDURE IF EXISTS `consultaEdificio`;*/
 
  /*Delimitador de bloque*/
  DELIMITER //
