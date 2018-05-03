@@ -15,7 +15,21 @@
  /*Para pruebas*/
  /*USE SENADO;
  DROP PROCEDURE IF EXISTS `borraEdificio`;*/
+ /*SELECT
+    CONCAT('DROP ',ROUTINE_TYPE,' `',ROUTINE_SCHEMA,'`.`',ROUTINE_NAME,'`;') as stmt
+FROM information_schema.ROUTINES; Borra todos los procedimientos*/ 
 
+/*SET FOREIGN_KEY_CHECKS = 0; 
+SET @tables = NULL;
+SELECT GROUP_CONCAT(table_schema, '.', table_name) INTO @tables
+  FROM information_schema.tables 
+  WHERE table_schema = 'heroku_4db762767b31ffb'; -- specify DB name here.
+
+SET @tables = CONCAT('DROP TABLE ', @tables);
+PREPARE stmt FROM @tables;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+SET FOREIGN_KEY_CHECKS = 1;  Borrar todas las tablas*/
  /*Delimitador de bloque*/
  DELIMITER //
 
