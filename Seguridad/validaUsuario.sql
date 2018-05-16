@@ -14,8 +14,8 @@
  
  /*Para pruebas*/
 
-/*USE escuelast;
-DROP PROCEDURE IF EXISTS `validaUsuario`;*/
+USE escuelast;
+DROP PROCEDURE IF EXISTS `validaUsuario`;
  /*Delimitador de bloque*/
  DELIMITER //
 
@@ -97,7 +97,20 @@ DROP PROCEDURE IF EXISTS `validaUsuario`;*/
 
 			END IF;
 
-			SELECT * FROM tt_ctUsuario;
+			/*SELECT * FROM tt_ctUsuario;*/
+			SELECT 	tt_ctUsuario.iPersona, 
+					tt_ctUsuario.cEmail, 
+					tt_ctUsuario.cContrasena, 
+					ctPersona.iIDTipoPersona, 
+					ctPersona.cNombre, 
+					ctPersona.cAPaterno, 
+					ctPersona.cAMaterno, 
+					ctPersona.lGenero, 
+					ctPersona.dtFechaNac, 
+					ctPersona.lActivo,
+					ctPersona.dtCreado, 
+					ctPersona.dtModificado 
+			FROM tt_ctUsuario INNER JOIN ctPersona ON ctPersona.iPersona = tt_ctUsuario.iPersona;
 
 		COMMIT;
 
