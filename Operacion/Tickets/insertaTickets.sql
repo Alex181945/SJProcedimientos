@@ -13,7 +13,8 @@
  */
  
  /*Para pruebas*/
-/*USE SENADO;*/
+ USE SENADO;
+ DROP PROCEDURE IF EXISTS `insertaTicket`;
 
  /*Delimitador de bloque*/
  DELIMITER //
@@ -78,7 +79,7 @@
 
 				THEN
 					SET lError = 1;
-					SET cError = "El estado no contiene valor";
+					SET cError = "El estatus del ticke no contiene valor";
 					LEAVE insertaTicket;
 
 			END IF;

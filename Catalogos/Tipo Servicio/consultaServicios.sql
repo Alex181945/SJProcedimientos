@@ -14,7 +14,8 @@
  */
 
  /*Para pruebas*/
-/*USE SENADO;*/
+ USE SENADO;
+ DROP PROCEDURE IF EXISTS `consultaServicios`;
 
   /*Delimitador de bloque*/
  DELIMITER //
