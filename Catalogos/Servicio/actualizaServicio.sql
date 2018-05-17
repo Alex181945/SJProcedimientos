@@ -1,16 +1,18 @@
 
 USE SENADO;
+DROP PROCEDURE IF EXISTS `actualizaServicio`;
 
  /*Delimitador de bloque*/
  DELIMITER //
 
  CREATE PROCEDURE actualizaServicio(IN iIDTipoServicio INTEGER(11),
-	 								IN cTipoServicio VARCHAR (50),
- 									IN lActivo     TINYINT(1),
-									IN cUsuario  VARCHAR(20), 									
- 									OUT lError TINYINT(1), 
- 									OUT cSqlState VARCHAR(50), 
- 									OUT cError VARCHAR(200))
+ 									IN iPartida        INTEGER(11),
+	 								IN cServicioSolicitado   VARCHAR (150),
+ 									IN lActivo         TINYINT(1),
+									IN cUsuario        VARCHAR(20), 									
+ 									OUT lError         TINYINT(1), 
+ 									OUT cSqlState      VARCHAR(50), 
+ 									OUT cError         VARCHAR(200))
  	actualizaServicio:BEGIN
 		/*Manejo de Errores*/ 
 		DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -44,8 +46,8 @@ USE SENADO;
 			SET cError    = "";
 			
 			/*Se valida que el usuario exista y este activo*/
-			IF NOT EXISTS(SELECT * FROM cttiposervicio WHERE cttiposervicio.cUsuario = cUsuario
-													AND cttiposervicio.lActivo  = 1)
+			IF NOT EXISTS(SELECT * FROM ctUsuario WHERE ctUsuario.cUsuario = cUsuario
+													AND ctUsuario.lActivo  = 1)
 
 				THEN
 					SET lError = 1; 
@@ -55,7 +57,8 @@ USE SENADO;
 			END IF;
 
 			/*Valida que el Servicio exista*/
-			IF NOT EXISTS(SELECT * FROM cttiposervicio WHERE cttiposervicio.iIDTipoServicio = iIDTipoServicio)
+			IF NOT EXISTS(SELECT * FROM ctServicioSolicitado WHERE ctServicioSolicitado.iIDTipoServicio = iIDTipoServicio
+																AND ctServicioSolicitado.iPartida = iPartida)
 
 				THEN 
 					SET lError = 1; 
@@ -84,12 +87,13 @@ USE SENADO;
 			END IF;
 
 			/*Realiza la actualizacion*/
-			UPDATE cttiposervicio
-				SET cttiposervicio.cTipoServicio    = cTipoServicio,
-					cttiposervicio.lActivo      	= lActivo,
-					cttiposervicio.dtModificado 	= NOW(),
-					cttiposervicio.cUsuario    		= cUsuario
-				WHERE cttiposervicio.iIDTipoServicio   = iIDTipoServicio;
+			UPDATE ctServicioSolicitado
+				SET ctServicioSolicitado.cServicioSolicitado = cServicioSolicitado,
+					ctServicioSolicitado.lActivo      	     = lActivo,
+					ctServicioSolicitado.dtModificado 	     = NOW(),
+					ctServicioSolicitado.cUsuario    	     = cUsuario
+				WHERE ctServicioSolicitado.iIDTipoServicio   = iIDTipoServicio 
+					AND ctServicioSolicitado.iPartida        = iPartida;
 
 		COMMIT;
 

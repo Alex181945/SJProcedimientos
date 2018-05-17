@@ -1,14 +1,16 @@
 
 USE SENADO;
+DROP PROCEDURE IF EXISTS `borraServicio`;
 
  /*Delimitador de bloque*/
  DELIMITER //
 
  CREATE PROCEDURE borraServicio(IN iIDTipoServicio INTEGER (11),
-	 							IN cUsuario  VARCHAR(20),
- 								OUT lError TINYINT(1), 
- 								OUT cSqlState VARCHAR(50), 
- 								OUT cError VARCHAR(200))
+ 								IN iPartida        INTEGER(11),
+	 							IN cUsuario        VARCHAR(20),
+ 								OUT lError         TINYINT(1), 
+ 								OUT cSqlState      VARCHAR(50), 
+ 								OUT cError         VARCHAR(200))
  	borraServicio:BEGIN
 		/*Manejo de Errores*/ 
 		DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -40,34 +42,46 @@ USE SENADO;
 			SET cSqlState = "";
 			SET cError    = "";
 
+			/*Se valida que el usuario exista y este activo*/
+			IF NOT EXISTS(SELECT * FROM ctUsuario WHERE ctUsuario.cUsuario = cUsuario
+													AND ctUsuario.lActivo  = 1)
+
+				THEN
+					SET lError = 1; 
+					SET cError = "El usuario del sistema no existe o no esta activo";
+					LEAVE borraServicio;
+
+			END IF;
 
 			/*Valida que el tipo de servicio exista*/
-			IF NOT EXISTS(SELECT * FROM cttiposervicio WHERE cttiposervicio.iIDTipoServicio = iIDTipoServicio)
+			IF NOT EXISTS(SELECT * FROM ctServicioSolicitado WHERE ctServicioSolicitado.iIDTipoServicio = iIDTipoServicio
+																AND ctServicioSolicitado.iPartida       = iPartida)
 
 				THEN 
 					SET lError = 1; 
-					SET cError = "Tipo de servicio no existe";
+					SET cError = "Servicio solicitado no existe";
 					LEAVE borraServicio;
 
 			END IF;
 
 			/*Valida que el tipo de servicio no este activo*/
-			IF NOT EXISTS(SELECT * FROM cttiposervicio WHERE cttiposervicio.iIDTipoServicio = iIDTipoServicio
-													AND cttiposervicio.lActivo  = 1)
+			IF NOT EXISTS(SELECT * FROM ctServicioSolicitado WHERE ctServicioSolicitado.iIDTipoServicio = iIDTipoServicio
+													AND ctServicioSolicitado.iPartida = iPartida
+													AND ctServicioSolicitado.lActivo  = 1)
 
 				THEN 
 					SET lError = 1; 
-					SET cError = "Tipo de servicio ya fue borrado con anterioridad";
+					SET cError = "Servicio solicitado ya fue borrado con anterioridad";
 					LEAVE borraServicio;
 
 			END IF;
 
 
-			UPDATE cttiposervicio
-				SET cttiposervicio.lActivo       	= 0,
-					cttiposervicio.dtModificado  	= NOW(),
-                    cttiposervicio.cUsuario      	= cUsuario
-				WHERE cttiposervicio.iIDTipoServicio = iIDTipoServicio;
+			UPDATE ctServicioSolicitado
+				SET ctServicioSolicitado.lActivo       	= 0,
+					ctServicioSolicitado.dtModificado  	= NOW(),
+                    ctServicioSolicitado.cUsuario      	= cUsuario
+				WHERE ctServicioSolicitado.iIDTipoServicio = iIDTipoServicio AND ctServicioSolicitado.iPartida = iPartida;
 
 		COMMIT;
 

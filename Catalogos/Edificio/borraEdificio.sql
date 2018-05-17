@@ -71,6 +71,17 @@ SET FOREIGN_KEY_CHECKS = 1;  Borrar todas las tablas*/
 			SET cSqlState = "";
 			SET cError    = "";
 
+			/*Se valida que el usuario exista y este activo*/
+			IF NOT EXISTS(SELECT * FROM ctUsuario WHERE ctUsuario.cUsuario = cUsuario
+													AND ctUsuario.lActivo  = 1)
+
+				THEN
+					SET lError = 1; 
+					SET cError = "El usuario del sistema no existe o no esta activo";
+					LEAVE borraEdificio;
+
+			END IF;
+
 			/*Valida que el edificio exista*/
 			IF NOT EXISTS(SELECT * FROM ctEdificios WHERE ctEdificios.iIDEdificio = iIDEdificio)
 

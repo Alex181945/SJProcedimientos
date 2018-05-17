@@ -1,9 +1,10 @@
-/*USE SENADO;*/
+USE SENADO;
+DROP PROCEDURE IF EXISTS `consultaServicios`;
 
   /*Delimitador de bloque*/
  DELIMITER //
 
- CREATE PROCEDURE consultaServicios(IN iTipoConsulta INT(3),
+ CREATE PROCEDURE consultaServicios(IN iTipoConsulta INT(3), 						
  									OUT lError       TINYINT(1), 
  									OUT cSqlState    VARCHAR(50), 
  									OUT cError       VARCHAR(200))
@@ -43,20 +44,20 @@
 			/*Crea una tabla temporal con la estructura de la tabla
 			 *especificada despues del LIKE
 			 */
-			DROP TEMPORARY TABLE IF EXISTS tt_cttiposervicio;
+			DROP TEMPORARY TABLE IF EXISTS tt_ctServicioSolicitado;
 
-			CREATE TEMPORARY TABLE tt_cttiposervicio LIKE cttiposervicio;
+			CREATE TEMPORARY TABLE tt_ctServicioSolicitado LIKE ctServicioSolicitado;
 
 			/*Casos para el tipo de consulta*/
 			CASE iTipoConsulta
 
-			    WHEN 0 THEN INSERT INTO tt_cttiposervicio SELECT * FROM cttiposervicio WHERE cttiposervicio.lActivo = 0;
-			    WHEN 1 THEN INSERT INTO tt_cttiposervicio SELECT * FROM cttiposervicio WHERE cttiposervicio.lActivo = 1;
-			    WHEN 2 THEN INSERT INTO tt_cttiposervicio SELECT * FROM cttiposervicio;
+			    WHEN 0 THEN INSERT INTO tt_ctServicioSolicitado SELECT * FROM ctServicioSolicitado WHERE ctServicioSolicitado.lActivo = 0;
+			    WHEN 1 THEN INSERT INTO tt_ctServicioSolicitado SELECT * FROM ctServicioSolicitado WHERE ctServicioSolicitado.lActivo = 1;
+			    WHEN 2 THEN INSERT INTO tt_ctServicioSolicitado SELECT * FROM ctServicioSolicitado;
 
 			END CASE;
 			/*Resultado de las consultas anteriores*/
-			SELECT * FROM tt_cttiposervicio;
+			SELECT * FROM tt_ctServicioSolicitado;
 
 		COMMIT;
 
