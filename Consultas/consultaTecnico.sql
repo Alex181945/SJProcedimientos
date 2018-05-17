@@ -61,10 +61,15 @@ DROP PROCEDURE IF EXISTS `consultaTecnico`;
 			    WHEN "1" THEN
 
 			    	/*Carga de Trabajo*/
-			    	SELECT iIDTecnico, COUNT(iIDTicket)
-			    		FROM opTickets 
-			    		WHERE DATE(opTickets.dtFecha) = DATE(NOW())
-			    		GROUP BY iIDTecnico ASC;
+			    	IF NOT EXISTS(SELECT iIDTecnico, COUNT(iIDTicket) FROM opTickets 
+			    					WHERE DATE(opTickets.dtFecha) = DATE(NOW())
+			    					GROUP BY iIDTecnico ASC)
+
+			    		THEN SELECT iIDTecnico FROM ctTecnico WHERE ctTecnico.lActivo = 1 LIMIT 1;
+
+			    		ELSE SELECT iIDTecnico, COUNT(iIDTicket) FROM opTickets WHERE DATE(opTickets.dtFecha) = DATE(NOW()) GROUP BY iIDTecnico ASC;
+
+			    	END IF;
 
 			END CASE;
 
