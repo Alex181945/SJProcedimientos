@@ -61,13 +61,24 @@ DROP PROCEDURE IF EXISTS `consultaTecnico`;
 			    WHEN "1" THEN
 
 			    	/*Carga de Trabajo*/
-			    	IF NOT EXISTS(SELECT iIDTecnico, COUNT(iIDTicket) FROM opTickets 
-			    					WHERE DATE(opTickets.dtFecha) = DATE(NOW())
-			    					GROUP BY iIDTecnico ASC)
 
+			    	IF NOT EXISTS(SELECT * FROM opTickets 
+			    					WHERE DATE(opTickets.dtFecha) = DATE(NOW()))
+
+			    		/*Cuando es el inicio del dia*/
 			    		THEN SELECT iIDTecnico FROM ctTecnico WHERE ctTecnico.lActivo = 1 LIMIT 1;
+			    		LEAVE consultaTecnico;
 
-			    		ELSE SELECT iIDTecnico, COUNT(iIDTicket) FROM opTickets WHERE DATE(opTickets.dtFecha) = DATE(NOW()) GROUP BY iIDTecnico ASC;
+			    	END IF;
+
+			    	IF EXISTS(SELECT iIDTecnico FROM ctTecnico WHERE ctTecnico.iIDTecnico != 
+			    		(SELECT iIDTecnico FROM opTickets WHERE DATE(opTickets.dtFecha) = DATE(NOW())))
+
+			    		/*Cuando existen aun tecnicos sin ticket asignado*/
+			    		THEN SELECT iIDTecnico FROM ctTecnico WHERE ctTecnico.iIDTecnico != (SELECT iIDTecnico FROM opTickets WHERE DATE(opTickets.dtFecha) = DATE(NOW())) AND ctTecnico.lActivo = 1 LIMIT 1;
+
+			    		/*Cuando todos los tecnicos estan en servicio*/
+			    		ELSE SELECT iIDTecnico, COUNT(iIDTicket) FROM opTickets WHERE DATE(opTickets.dtFecha) = DATE(NOW()) GROUP BY iIDTecnico ASC LIMIT 1;
 
 			    	END IF;
 
