@@ -14,7 +14,7 @@
 
  /*Para pruebas*/
 USE SENADO;
-DROP PROCEDURE IF EXISTS `borraEstatusTicket`;
+DROP PROCEDURE IF EXISTS `actualizaEstatusTicket`;
 
 DELIMITER //
 
