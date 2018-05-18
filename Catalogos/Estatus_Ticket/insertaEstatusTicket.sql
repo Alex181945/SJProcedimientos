@@ -12,7 +12,8 @@
  */
 
  /*Para pruebas*/
-/*USE cau;*/
+USE SENADO;
+DROP PROCEDURE IF EXISTS `insertaEstatusTicket`;
 
 DELIMITER //
 

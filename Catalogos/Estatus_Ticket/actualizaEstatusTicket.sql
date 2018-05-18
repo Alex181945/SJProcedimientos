@@ -13,7 +13,8 @@
  */
 
  /*Para pruebas*/
-/*USE cau;*/
+USE SENADO;
+DROP PROCEDURE IF EXISTS `borraEstatusTicket`;
 
 DELIMITER //
 

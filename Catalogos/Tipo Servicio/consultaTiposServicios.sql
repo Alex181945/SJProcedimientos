@@ -15,16 +15,16 @@
 
  /*Para pruebas*/
  USE SENADO;
- DROP PROCEDURE IF EXISTS `consultaServicios`;
+ DROP PROCEDURE IF EXISTS `consultaTiposServicios`;
 
   /*Delimitador de bloque*/
  DELIMITER //
 
- CREATE PROCEDURE consultaServicios     (	IN iTipoConsulta INT(3),
+ CREATE PROCEDURE consultaTiposServicios     (	IN iTipoConsulta INT(3),
 											OUT lError       TINYINT(1), 
 											OUT cSqlState    VARCHAR(50), 
 											OUT cError       VARCHAR(200))
- 	consultaServicios:BEGIN
+ 	consultaTiposServicios:BEGIN
 
 		/*Manejo de Errores*/ 
 		DECLARE EXIT HANDLER FOR SQLEXCEPTION
