@@ -76,14 +76,14 @@ DELIMITER //
 			END IF;
 
 			/*Valida que el ticket este activo*/
-			IF NOT EXISTS(SELECT * FROM tt_ctEstatusTickets WHERE tt_ctEstatusTickets.lActivo = 1)
+			/*IF NOT EXISTS(SELECT * FROM tt_ctEstatusTickets WHERE tt_ctEstatusTickets.lActivo = 1)
 
 				THEN 
 					SET lError = 1; 
 					SET cError = "Estado de activo no activo";
 					LEAVE consultaEstatusTicket;
 
-			END IF;
+			END IF;*/
 
 			SELECT * FROM tt_ctEstatusTickets;
 

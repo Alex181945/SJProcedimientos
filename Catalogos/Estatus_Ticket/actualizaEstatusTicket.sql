@@ -108,15 +108,6 @@ DELIMITER //
 
 			END IF;
 
-			IF lActivo = 0 OR lActivo = NULL 
-
-				THEN 
-					SET lError = 1; 
-					SET cError = "Activo no contiene valor";
-					LEAVE actualizaEstatusTicket;
-
-			END IF;
-
 			/*Realiza la actualizacion*/
 			UPDATE 	ctEstatusTickets
 					SET 	ctEstatusTickets.cEstado     	= cEstado,
