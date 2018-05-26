@@ -77,7 +77,7 @@
 						INNER JOIN opatributopersona 
 							ON opatributopersona.iIDTipoPersona = ctpersona.iIDTipoPersona AND 
 							opatributopersona.iPersona = ctpersona.iPersona WHERE 
-							CONCAT(ctPersona.cNombre, ' ', ctPersona.cAPaterno, ' ', ctPersona.cAMaterno) LIKE CONCAT('%',busqueda1,'%');
+							LOWER(CONCAT(ctPersona.cNombre, ' ', ctPersona.cAPaterno, ' ', ctPersona.cAMaterno)) LIKE LOWER(CONCAT('%',busqueda1,'%'));
 
 				LEAVE consultaAlumnos;
 
