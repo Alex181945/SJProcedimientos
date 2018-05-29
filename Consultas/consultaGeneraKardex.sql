@@ -67,9 +67,12 @@
 			END IF;
 
 			SELECT opCalificacion.*, opCalfMateria.iPartida, 
-				opCalfMateria.deCalificacion, opCalfMateria.cObs 
-				FROM opCalificacion INNER JOIN opCalfMateria ON opCalfMateria.iPersona = opCalificacion.iPersona AND opCalfMateria.iMateria = opCalificacion.iMateria
-			WHERE opCalificacion.iPersona = iPersona;
+				opCalfMateria.deCalificacion, opCalfMateria.cObs, ctMateria.cMateria
+				FROM opCalificacion 
+					INNER JOIN opCalfMateria ON opCalfMateria.iPersona  = opCalificacion.iPersona 
+						AND opCalfMateria.iMateria = opCalificacion.iMateria
+					INNER JOIN ctMateria ON ctMateria.iMateria = opCalificacion.iMateria
+			WHERE opCalificacion.iPersona      = iPersona;
 				
 		COMMIT;
 
