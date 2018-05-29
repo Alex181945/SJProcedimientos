@@ -17,12 +17,12 @@
 
  DELIMITER //
 
- CREATE PROCEDURE ctPersona( IN iIDTipoPersona  VARCHAR(30),
- 							 IN cNombre			VARCHAR(150),
- 							 IN cAPaterno   	VARCHAR(150),
- 							 IN cAMaterno  	    VARCHAR(150),
- 							 IN lGenero			VARCHAR(50),
- 							 iN dtFechaNac		VARCHAR(50),
+ CREATE PROCEDURE insertactPersona( IN iIDTipoPersona  VARCHAR(30),
+		 							 IN cNombre			VARCHAR(150),
+		 							 IN cAPaterno   	VARCHAR(150),
+		 							 IN cAMaterno  	    VARCHAR(150),
+		 							 IN lGenero			VARCHAR(50),
+		 							 iN dtFechaNac		VARCHAR(50),
  										OUT lError      TINYINT(1), 
  										OUT cSqlState   VARCHAR(50), 
  										OUT cError      VARCHAR(200))
@@ -62,7 +62,7 @@
 			SET cError    = "";
 
 			/*Valida el Tipo Tipo Persona que crea el registro*/
-			IF EXISTS(SELECT * FROM ctPersona WHERE ctPersona.iIDTipoPersona = iIDTipoPersona)
+		/*	IF EXISTS(SELECT * FROM ctPersona WHERE ctPersona.iIDTipoPersona = iIDTipoPersona)*/
 
 				THEN
 					SET lError = 1; 
@@ -74,7 +74,7 @@
 
 			/*Se valida que los dato no se encunetre nulos o vacios respecto a la tabla*/
 
-			IF ctPersona = "" OR ctPersona = NULL
+			IF iIDTipoPersona = "" OR iIDTipoPersona = NULL
 
 				THEN
 						SET lError = 1;
@@ -135,8 +135,7 @@
 									  ctPersona.lGenero,
 									  ctPersona.dtFechaNac,
 									  ctPersona.lActivo,
-									  ctPersona.dtCreado,
-									  ctPersona.cUsuario)
+									  ctPersona.dtCreado)
 							VALUES (iIDTipoPersona,
 								    cNombre,
 								    cAPaterno,
@@ -144,8 +143,7 @@
 								    lGenero,
 								    dtFechaNac,
 								    1,
-								    NOW(),
-								    cUsuario);
+								    NOW());
 		COMMIT;
 	END;//	
  /*Reseteo del delimitador*/	
