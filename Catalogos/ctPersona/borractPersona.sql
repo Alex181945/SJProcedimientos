@@ -17,12 +17,8 @@
 
  DELIMITER //
 
- CREATE PROCEDURE borractPersona( IN iIDTipoPersona  INTEGER,
-									 IN cNombre			VARCHAR(150),
-		 							 IN cAPaterno   	VARCHAR(150),
-		 							 IN cAMaterno  	    VARCHAR(150),
-		 							 IN lGenero			VARCHAR(50),
-		 							 iN dtFechaNac		VARCHAR(50),
+ CREATE PROCEDURE borractPersona( IN iPersona  INTEGER,
+ 								  IN iIDTipoPersona  INTEGER,
  										OUT lError      TINYINT(1), 
  										OUT cSqlState   VARCHAR(50), 
  										OUT cError      VARCHAR(200))
@@ -63,7 +59,7 @@
  			
 			/*Comprueba si existe el Tipo Persona*/
 
-			IF NOT EXISTS(SELECT * FROM ctPersona WHERE ctPersona.iIDTipoPersona = iIDTipoPersona
+		/*	IF NOT EXISTS(SELECT * FROM ctPersona WHERE ctPersona.iIDTipoPersona = iIDTipoPersona
 															AND ctPersona.cNombre = cNombre
 															AND ctPersona.cAPaterno = cAPaterno
 															AND ctPersona.cAMaterno= cAMaterno
@@ -76,33 +72,25 @@
  					SET cError = "El atributo de la persona no existe";
  					LEAVE borractPersona;
  
- 			END IF;
+ 			END IF;*/
  			/*Valida que el Tipo Persona no este activo*/
 
 			IF NOT EXISTS(SELECT * FROM ctPersona WHERE ctPersona.iIDTipoPersona = iIDTipoPersona
-															AND ctPersona.cNombre = cNombre
-															AND ctPersona.cAPaterno = cAPaterno
-															AND ctPersona.cAMaterno = cAMaterno
-															AND ctPersona.lGenero = lGenero
-															AND ctPersona.dtFechaNac= dtFechaNac
+															AND ctPersona.iPersona = iPersona
 															AND ctPersona.lActivo = 1)
  				THEN 
  					SET lError = 1; 
- 					SET cError = "El atributo de la persona ya fue borrado con anterioridad";
- 					LEAVE borractPersona;;
+ 					SET cError = "La persona ya fue borrado con anterioridad";
+ 					LEAVE borractPersona;
  
  			END IF;
  
  			/*Realiza el borrado logico que es una llamada al procedimiento actualizaTipoPersona*/
  			UPDATE ctPersona
  				SET ctPersona.lActivo       = 0,
- 					ctPersona.dtModificado  = NOW(),
- 				WHERE ctPersona.iIDTipoPersona = iIDTipoPersona;
- 					AND ctPersona.cNombre 	   = cNombre
- 					AND ctPersona.cAPaterno    = cAPaterno
- 					AND ctPersona.cAMaterno    = cAMaterno
- 					AND ctPersona.lGenero      = lGenero
- 					AND ctPersona.dtFechaNac   = dtFechaNac;
+ 					ctPersona.dtModificado  = NOW()
+ 				WHERE ctPersona.iIDTipoPersona = iIDTipoPersona
+ 					AND ctPersona.iPersona = iPersona;
  
 		COMMIT;
 
