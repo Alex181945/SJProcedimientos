@@ -94,7 +94,7 @@
  			 END IF;
 
  			  			/*Valida que el Tipo Persona este activo*/
- 			IF NOT EXISTS(SELECT * FROM tt_opGrupos WHERE tt_opGrupos.lActivo = 1)
+ 			IF NOT EXISTS(SELECT * FROM tt_opGrupoDet WHERE tt_opGrupoDet.lActivo = 1)
 
 
  			THEN 
