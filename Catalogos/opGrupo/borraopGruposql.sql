@@ -79,7 +79,7 @@
 			IF NOT EXISTS(SELECT * FROM opGrupo WHERE opGrupo.iGrupo = iGrupo
 																	AND opGrupo.iCarrera = iCarrera
 																	AND opGrupo.iPeriodo = iPeriodo
-																	AND opAtributoPersona.lActivo = 1)
+																	AND opGrupo.lActivo = 1)
  				THEN 
  					SET lError = 1; 
  					SET cError = "El Atributo Grupo ya fue borrado con anterioridad";
@@ -88,7 +88,7 @@
  			END IF;
  
  			/*Realiza el borrado logico que es una llamada al procedimiento actualizaTipoPersona*/
- 			UPDATE opGrupoopGrupo
+ 			UPDATE opGrupo
  				SET opGrupo.lActivo       = 0,
  					opGrupo.dtModificado  = NOW()
  				WHERE opGrupo.iGrupo = iGrupo
