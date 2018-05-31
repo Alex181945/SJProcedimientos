@@ -99,7 +99,7 @@
  			END IF;
  
 
- 			SELECT * FROM tt_opGrupoDets;
+ 			SELECT * FROM tt_opGrupoAlumno;
 
 		COMMIT;
 
