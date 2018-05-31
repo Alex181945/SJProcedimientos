@@ -17,7 +17,7 @@
 
  DELIMITER //
 
- CREATE PROCEDURE insertactPeriodo( cPeriodo  VARCHAR(100),
+ CREATE PROCEDURE insertactPeriodo( IN cPeriodo  VARCHAR(100),
 		 									OUT lError      TINYINT(1), 
 		 									OUT cSqlState   VARCHAR(50), 
 		 									OUT cError      VARCHAR(200))
