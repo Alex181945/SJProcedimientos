@@ -75,14 +75,14 @@
 			SET cError    = "";
 
 			/*Validacion de campos obligatorios*/
-			IF iIDEstado = 0 OR iIDEstado = NULL
+			/*IF iIDEstado = 0 OR iIDEstado = NULL
 
 				THEN
 					SET lError = 1;
 					SET cError = "El estatus del ticke no contiene valor";
 					LEAVE insertaTicket;
 
-			END IF;
+			END IF;*/
 
 			IF iIDEdificio = 0 OR iIDEdificio = NULL
 
@@ -129,7 +129,7 @@
 
 			END IF;
 
-			IF lNotificacion = 0 OR lNotificacion = NULL
+			IF lNotificacion = NULL
 
 				THEN
 					SET lError = 1;
@@ -138,7 +138,7 @@
 
 			END IF;
 
-			IF lArrendado = 0 OR lArrendado = NULL
+			IF lArrendado = NULL
 
 				THEN
 					SET lError = 1;
@@ -158,14 +158,14 @@
 
 			/*Validacion de claves foraneas*/
 
-			IF NOT EXISTS(SELECT * FROM ctEstatusTickets WHERE ctEstatusTickets.iIDEstado = iIDEstado
+			/*IF NOT EXISTS(SELECT * FROM ctEstatusTickets WHERE ctEstatusTickets.iIDEstado = iIDEstado
 															AND ctEstatusTickets.lActivo = 1)
 				THEN
 					SET lError = 1;
 					SET cError = "El estatus del ticket no existe o no esta activo";
 					LEAVE insertaTicket;
 
-			END IF;
+			END IF;*/
 
 			IF NOT EXISTS(SELECT * FROM ctEdificios WHERE ctEdificios.iIDEdificio = iIDEdificio
 															AND ctEdificios.lActivo = 1)
@@ -185,23 +185,23 @@
 
 			END IF;
 
-			IF NOT EXISTS(SELECT * FROM ctCriticidad WHERE ctCriticidad.iIDCriticidad = iIDCriticidad
+			/*IF NOT EXISTS(SELECT * FROM ctCriticidad WHERE ctCriticidad.iIDCriticidad = iIDCriticidad
 															AND ctCriticidad.lActivo = 1)
 				THEN
 					SET lError = 1;
 					SET cError = "La criticidad no existe o no esta activo";
 					LEAVE insertaTicket;
 
-			END IF;
+			END IF;*/
 
-			IF NOT EXISTS(SELECT * FROM ctFormaSolicitud WHERE ctFormaSolicitud.iIDCreaTicket = iIDCreaTicket
+			/*IF NOT EXISTS(SELECT * FROM ctFormaSolicitud WHERE ctFormaSolicitud.iIDCreaTicket = iIDCreaTicket
 															AND ctFormaSolicitud.lActivo = 1)
 				THEN
 					SET lError = 1;
 					SET cError = "La forma de solicitud no existe o no esta activo";
 					LEAVE insertaTicket;
 
-			END IF;
+			END IF;*/
 
 
 			/*Inserta registro*/
@@ -215,19 +215,19 @@
 									opTickets.cPiso,
 									opTickets.cOficina,
 									opTickets.iIDTipoServicio,
-									opTickets.cUsuarioReporta,
+									opTickets.cUsuReporta,
 									opTickets.cObs,
 									opTickets.iIDCreaTicket,
 									opTickets.iIDCriticidad,
-									opTickets.cTecnico,
+									opTickets.iIDTecnico,
 									opTickets.lTecnicoAcepta,
 									opTickets.lNotificacion,
 									opTickets.lArrendado,
-									opTickets.cUsuarioR,
-									opTickets.dtFecha
+									opTickets.dtFecha,
+									opTickets.cUsuario
 								)
 							VALUES(
-								iIDEstado,
+								1,
 								cNumInventario,
 								cResguardante,
 								cUsuarioEquipo,
@@ -244,8 +244,8 @@
 								lTecnicoAcepta,
 								lNotificacion,
 								lArrendado,
-								cUsuarioR,
-								NOW()
+								NOW(),
+								cUsuarioR
 								);
 
 

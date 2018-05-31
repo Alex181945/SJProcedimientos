@@ -63,7 +63,7 @@ DROP PROCEDURE IF EXISTS `consultaTecnico`;
 			    	/*Carga de Trabajo*/
 
 			    	IF NOT EXISTS(SELECT * FROM opTickets 
-			    					WHERE DATE(opTickets.dtFecha) = DATE(NOW()))
+			    					WHERE DATE(opTickets.dtFecha) = DATE(NOW()) LIMIT 1)
 
 			    		/*Cuando es el inicio del dia*/
 			    		THEN SELECT iIDTecnico FROM ctTecnico WHERE ctTecnico.lActivo = 1 LIMIT 1;
