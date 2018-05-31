@@ -70,7 +70,7 @@
 			SET cError    = "";
 			
 			/*Valida que el edificio exista*/
-			IF NOT EXISTS(SELECT * FROM ctEdificio WHERE ctEdificio.iIDEdificio = iIDEdificio)
+			IF NOT EXISTS(SELECT * FROM ctEdificios WHERE ctEdificios.iIDEdificio = iIDEdificio)
 
 				THEN 
 					SET lError = 1; 
@@ -80,15 +80,15 @@
 			END IF;
 
 			/*Valida que el edificio no este activo*/
-			IF NOT EXISTS(SELECT * FROM ctEdificio WHERE ctEdificio.iIDEdificio = iIDEdificio 
-													AND ctEdificio.lActivo  = 1)
+			/*IF EXISTS(SELECT * FROM ctEdificios WHERE ctEdificios.iIDEdificio = iIDEdificio 
+													AND ctEdificios.lActivo   = lActivo)
 
 				THEN 
 					SET lError = 1; 
 					SET cError = "El edificio ya fue borrado con anterioridad";
 					LEAVE actualizaEdificio;
 
-			END IF;
+			END IF;*/
 
 			IF cEdificio = "" OR cEdificio = NULL
 

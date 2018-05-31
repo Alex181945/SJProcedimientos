@@ -12,7 +12,8 @@
  */
 
  /*Para pruebas*/
-/*USE cau;*/
+USE SENADO;
+DROP PROCEDURE IF EXISTS `insertaEstatusTicket`;
 
 DELIMITER //
 
@@ -106,22 +107,12 @@ DELIMITER //
 					LEAVE insertaEstatusTicket;
 
 			END IF;
-			
-			IF lActivo = 0 OR lActivo = NULL 
-
-				THEN 
-					SET lError = 1; 
-					SET cError = "Activo no contiene valor";
-					LEAVE insertaEstatusTicket;
-
-			END IF;
-           
 
 			/*Insercion del usuario*/
-			INSERT INTO ctEstatusTickets (ctEstatusTickets.cEstado,
-                                        ctEstatusTickets.lActivo,
-									    ctEstatusTickets.dtCreado, 
-									    ctEstatusTickets.cUsuario) 
+			INSERT INTO ctEstatusTickets(  	ctEstatusTickets.cEstado,
+											ctEstatusTickets.lActivo,
+									    	ctEstatusTickets.dtCreado, 
+									    	ctEstatusTickets.cUsuario ) 
 						      VALUES   (cEstado,
 									    1,
 									    NOW(),

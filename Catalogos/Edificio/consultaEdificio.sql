@@ -61,7 +61,7 @@
 			 */
 			DROP TEMPORARY TABLE IF EXISTS tt_ctEdificios;
 
-			CREATE TEMPORARY TABLE tt_ctEdificios LIKE ctEdificio;
+			CREATE TEMPORARY TABLE tt_ctEdificios LIKE ctEdificios;
 
 			/*Comprueba si existe el Edif*/
 			IF EXISTS(SELECT * FROM ctEdificios WHERE ctEdificios.iIDEdificio = iIDEdificio)
@@ -78,14 +78,14 @@
 			END IF;
 
 			/*Valida que el edificio este activo*/
-			IF NOT EXISTS(SELECT * FROM tt_ctEdificios WHERE tt_ctEdificios.lActivo = 1)
+			/*IF NOT EXISTS(SELECT * FROM tt_ctEdificios WHERE tt_ctEdificios.lActivo = 1)
 
 				THEN 
 					SET lError = 1; 
 					SET cError = "Edificio no activo";
 					LEAVE consultaEdificio;
 
-			END IF;
+			END IF;*/
 
 			SELECT * FROM tt_ctEdificios;
 

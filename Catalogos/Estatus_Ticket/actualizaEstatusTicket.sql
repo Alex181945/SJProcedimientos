@@ -13,7 +13,8 @@
  */
 
  /*Para pruebas*/
-/*USE cau;*/
+USE SENADO;
+DROP PROCEDURE IF EXISTS `actualizaEstatusTicket`;
 
 DELIMITER //
 
@@ -103,15 +104,6 @@ DELIMITER //
 				THEN 
 					SET lError = 1; 
 					SET cError = "El usuario no contiene valor";
-					LEAVE actualizaEstatusTicket;
-
-			END IF;
-
-			IF lActivo = 0 OR lActivo = NULL 
-
-				THEN 
-					SET lError = 1; 
-					SET cError = "Activo no contiene valor";
 					LEAVE actualizaEstatusTicket;
 
 			END IF;

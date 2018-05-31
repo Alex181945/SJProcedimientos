@@ -13,7 +13,8 @@
  */
 
  /*Para pruebas*/
-/*USE cau;*/
+USE SENADO;
+DROP PROCEDURE IF EXISTS `consultaEstatusTicket`;
 
 DELIMITER //
 
@@ -56,12 +57,9 @@ DELIMITER //
 			SET lError    = 0;
 			SET cSqlState = "";
 			SET cError    = "";
-
-            /*Valida el usuario que crea el registro*/
-			IF NOT EXISTS(SELECT * FROM ctUsuario WHERE ctUsuario.cUsuario = cUsuario
-													AND ctUsuario.lActivo  = 1)
         
-            DROP TEMPORARY  TABLE IF EXISTS tt_ctEstatusTickets;
+        	DROP TEMPORARY TABLE IF EXISTS tt_ctEstatusTickets;
+
 			CREATE TEMPORARY TABLE tt_ctEstatusTickets LIKE ctEstatusTickets;
 
 			IF EXISTS(SELECT * FROM ctEstatusTickets WHERE ctEstatusTickets.iIDEstado = iIDEstado)
@@ -78,14 +76,14 @@ DELIMITER //
 			END IF;
 
 			/*Valida que el ticket este activo*/
-			IF NOT EXISTS(SELECT * FROM tt_ctEstatusTickets WHERE tt_ctEstatusTickets.lActivo = 1)
+			/*IF NOT EXISTS(SELECT * FROM tt_ctEstatusTickets WHERE tt_ctEstatusTickets.lActivo = 1)
 
 				THEN 
 					SET lError = 1; 
 					SET cError = "Estado de activo no activo";
 					LEAVE consultaEstatusTicket;
 
-			END IF;
+			END IF;*/
 
 			SELECT * FROM tt_ctEstatusTickets;
 

@@ -1,9 +1,11 @@
 USE SENADO;
+DROP PROCEDURE IF EXISTS `consultaServicio`;
  
  /*Delimitador de bloque*/
  DELIMITER //
 
- CREATE PROCEDURE consultaServicio(	IN iIDTipoServicio INTEGER,
+ CREATE PROCEDURE consultaServicio(	IN iIDTipoServicio  INTEGER(11),
+ 									IN iPartida        INTEGER(11),
  									OUT lError TINYINT(1), 
  									OUT cSqlState VARCHAR(50), 
  									OUT cError VARCHAR(200))
@@ -42,34 +44,35 @@ USE SENADO;
 			/*Crea una tabla temporal con la estructura de la tabla
 			 *especificada despues del LIKE
 			 */
-			DROP TEMPORARY TABLE IF EXISTS tt_cttiposervicio;
+			DROP TEMPORARY TABLE IF EXISTS tt_ctServicioSolicitado;
 
-			CREATE TEMPORARY TABLE tt_cttiposervicio LIKE cttiposervicio;
+			CREATE TEMPORARY TABLE tt_ctServicioSolicitado LIKE ctServicioSolicitado;
 
 			/*Comprueba si existe el servicio*/
-			IF EXISTS(SELECT * FROM cttiposervicio WHERE cttiposervicio.iIDTipoServicio = iIDTipoServicio)
+			IF EXISTS(SELECT * FROM ctServicioSolicitado WHERE ctServicioSolicitado.iIDTipoServicio = iIDTipoServicio
+															AND ctServicioSolicitado.iPartida       = iPartida)
 
 				/*Si existe copia toda la informacion del servicio a la tabla temporal*/
-				THEN INSERT INTO tt_cttiposervicio SELECT * FROM cttiposervicio WHERE cttiposervicio.iIDTipoServicio = iIDTipoServicio;
+				THEN INSERT INTO tt_ctServicioSolicitado SELECT * FROM ctServicioSolicitado WHERE ctServicioSolicitado.iIDTipoServicio = iIDTipoServicio AND ctServicioSolicitado.iPartida = iPartida;
 
 				/*Si no manda error de que no lo encontro*/
 				ELSE 
 					SET lError = 1; 
-					SET cError = "Tipo de servicio no existe";
+					SET cError = "Servicio solicitado no existe";
 					LEAVE consultaServicio;
 
 			END IF;
 
 			/*Valida que el servicio este activo*/
-			IF NOT EXISTS(SELECT * FROM tt_cttiposervicio WHERE tt_cttiposervicio.lActivo = 1)
+			IF NOT EXISTS(SELECT * FROM tt_ctServicioSolicitado WHERE tt_ctServicioSolicitado.lActivo = 1)
 				THEN 
 					SET lError = 1; 
-					SET cError = "Tipo de Servicio no activo";
+					SET cError = "Servicio solicitado no activo";
 					LEAVE consultaServicio;
 
 			END IF;
 
-			SELECT * FROM tt_cttiposervicio;
+			SELECT * FROM tt_ctServicioSolicitado;
 
 		COMMIT;
 
