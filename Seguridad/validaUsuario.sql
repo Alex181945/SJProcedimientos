@@ -13,13 +13,12 @@
  */
  
  /*Para pruebas*/
+USE escuelajuana;
 
-USE escuelast;
-DROP PROCEDURE IF EXISTS `validaUsuario`;
  /*Delimitador de bloque*/
  DELIMITER //
 
- CREATE PROCEDURE validaUsuario(	IN cUsuario   VARCHAR(50),
+ CREATE PROCEDURE validaUsuario(	IN cUsuario   VARCHAR(20),
  									IN cPassword  VARCHAR(20),
  									OUT lError    TINYINT(1), 
  									OUT cSqlState VARCHAR(50), 
@@ -92,25 +91,12 @@ DROP PROCEDURE IF EXISTS `validaUsuario`;
 
 				THEN 
 					SET lError = 1; 
-					SET cError = "Usuario y/o Contrasena erroneas";
+					SET cError = "Usuario y/o Contraseña erroneas";
 					LEAVE validaUsuario;
 
 			END IF;
 
-			/*SELECT * FROM tt_ctUsuario;*/
-			SELECT 	tt_ctUsuario.iPersona, 
-					tt_ctUsuario.cEmail, 
-					tt_ctUsuario.cContrasena, 
-					ctPersona.iIDTipoPersona, 
-					ctPersona.cNombre, 
-					ctPersona.cAPaterno, 
-					ctPersona.cAMaterno, 
-					ctPersona.lGenero, 
-					ctPersona.dtFechaNac, 
-					ctPersona.lActivo,
-					ctPersona.dtCreado, 
-					ctPersona.dtModificado 
-			FROM tt_ctUsuario INNER JOIN ctPersona ON ctPersona.iPersona = tt_ctUsuario.iPersona;
+			SELECT * FROM tt_ctUsuario;
 
 		COMMIT;
 
