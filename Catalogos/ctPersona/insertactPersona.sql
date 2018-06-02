@@ -13,15 +13,16 @@
  
  /*Delimitador de bloque*/
 
- USE escuelajuana;
+ USE escuelast;
+ DROP PROCEDURE IF EXISTS `insertactPersona`;
 
  DELIMITER //
 
- CREATE PROCEDURE insertactPersona( IN iIDTipoPersona  VARCHAR(30),
+ CREATE PROCEDURE insertactPersona( IN iIDTipoPersona  INTEGER(11),
 		 							 IN cNombre			VARCHAR(150),
 		 							 IN cAPaterno   	VARCHAR(150),
 		 							 IN cAMaterno  	    VARCHAR(150),
-		 							 IN lGenero			VARCHAR(50),
+		 							 IN lGenero			TINYINT(1),
 		 							 iN dtFechaNac		VARCHAR(50),
  										OUT lError      TINYINT(1), 
  										OUT cSqlState   VARCHAR(50), 
@@ -62,14 +63,14 @@
 			SET cError    = "";
 
 			/*Valida el Tipo Tipo Persona que crea el registro*/
-		/*	IF EXISTS(SELECT * FROM ctPersona WHERE ctPersona.iIDTipoPersona = iIDTipoPersona)*/
+			/*IF EXISTS(SELECT * FROM ctPersona WHERE ctPersona.iIDTipoPersona = iIDTipoPersona)
 
 				THEN
 					SET lError = 1; 
 					SET cError = "El Tipo de Persona del sistema no existe";
 					LEAVE insertactPersona;
 
-			END IF;
+			END IF;*/
 
 
 			/*Se valida que los dato no se encunetre nulos o vacios respecto a la tabla*/
@@ -119,14 +120,14 @@
 
 			END IF;
 
-			IF dtFechaNac = ""  OR dtFechaNac = NULL
+			/*IF dtFechaNac = ""  OR dtFechaNac = NULL
 
 				THEN
 						SET lError = 1;
 						SET cError = "La Fecha de Nacimiento no tiene valor";
 						LEAVE insertactPersona;
 
-			END IF;
+			END IF;*/
 
 			INSERT INTO ctPersona(ctPersona.iIDTipoPersona,
 									  ctPersona.cNombre,
@@ -144,6 +145,7 @@
 								    dtFechaNac,
 								    1,
 								    NOW());
+
 		COMMIT;
 	END;//	
  /*Reseteo del delimitador*/	
