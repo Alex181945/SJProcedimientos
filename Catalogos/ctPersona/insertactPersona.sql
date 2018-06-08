@@ -23,7 +23,8 @@
 		 							 IN cAPaterno   	VARCHAR(150),
 		 							 IN cAMaterno  	    VARCHAR(150),
 		 							 IN lGenero			TINYINT(1),
-		 							 iN dtFechaNac		VARCHAR(50),
+		 							 IN dtFechaNac		VARCHAR(50),
+		 							 OUT iPersona       INTEGER(11),
  										OUT lError      TINYINT(1), 
  										OUT cSqlState   VARCHAR(50), 
  										OUT cError      VARCHAR(200))
@@ -75,7 +76,7 @@
 
 			/*Se valida que los dato no se encunetre nulos o vacios respecto a la tabla*/
 
-			IF iIDTipoPersona = "" OR iIDTipoPersona = NULL
+			IF iIDTipoPersona = 0 OR iIDTipoPersona = NULL
 
 				THEN
 						SET lError = 1;
@@ -111,7 +112,7 @@
 
 			END IF;
 
-			IF lGenero = 0 OR lGenero = NULL
+			IF lGenero = NULL
 
 				THEN
 						SET lError = 1;
@@ -142,9 +143,11 @@
 								    cAPaterno,
 								    cAMaterno,
 								    lGenero,
-								    dtFechaNac,
+								    STR_TO_DATE(dtFechaNac, '%Y-%m-%d'),
 								    1,
 								    NOW());
+
+			SET iPersona = LAST_INSERT_ID();
 
 		COMMIT;
 	END;//	
