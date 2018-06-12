@@ -18,13 +18,13 @@
 
  DELIMITER //
 
- CREATE PROCEDURE insertactPersona( IN iIDTipoPersona  INTEGER(11),
-		 							 IN cNombre			VARCHAR(150),
-		 							 IN cAPaterno   	VARCHAR(150),
-		 							 IN cAMaterno  	    VARCHAR(150),
-		 							 IN lGenero			TINYINT(1),
-		 							 IN dtFechaNac		VARCHAR(50),
-		 							 OUT iPersona       INTEGER(11),
+ CREATE PROCEDURE insertactPersona( IN iIDTipoPersona   INTEGER(11),
+		 							IN cNombre			VARCHAR(150),
+		 							IN cAPaterno   	    VARCHAR(150),
+		 							IN cAMaterno  	    VARCHAR(150),
+		 							IN lGenero			TINYINT(1),
+		 							IN dtFechaNac		VARCHAR(50),
+		 							INOUT iPersona      INTEGER(11),
  										OUT lError      TINYINT(1), 
  										OUT cSqlState   VARCHAR(50), 
  										OUT cError      VARCHAR(200))
@@ -64,14 +64,14 @@
 			SET cError    = "";
 
 			/*Valida el Tipo Tipo Persona que crea el registro*/
-			/*IF EXISTS(SELECT * FROM ctPersona WHERE ctPersona.iIDTipoPersona = iIDTipoPersona)
+			IF iPersona != 0 AND iPersona != NULL AND EXISTS(SELECT * FROM ctPersona WHERE ctPersona.iPersona = iPersona)
 
 				THEN
 					SET lError = 1; 
-					SET cError = "El Tipo de Persona del sistema no existe";
+					SET cError = "Ya existe registro de la persona";
 					LEAVE insertactPersona;
 
-			END IF;*/
+			END IF;
 
 
 			/*Se valida que los dato no se encunetre nulos o vacios respecto a la tabla*/

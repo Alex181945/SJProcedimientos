@@ -3,7 +3,7 @@
  * Autor: Alberto Robles
  * Fecha: 16/03/2018
  * Descripcion: Procedimiento que inserta Tipo Persona
- *  
+ *  y sus atributos
  * Modificaciones:
  * <Quien modifico:> <Cuando modifico:> <Donde modifico:>
  * Ejemplo: Alberto Robles 16/03/2018 In-15 Fn-19 
@@ -14,16 +14,26 @@
  /*Delimitador de bloque*/
 
  USE escuelast;
-
+ DROP PROCEDURE IF EXISTS `opInsertaPersona`;
  DELIMITER //
 
- CREATE PROCEDURE opInsertaPersona( IN cCarrera  VARCHAR(100),
-		 							OUT lError      TINYINT(1), 
-		 							OUT cSqlState   VARCHAR(50), 
-		 							OUT cError      VARCHAR(200))
+ CREATE PROCEDURE opInsertaPersona( IN iIDTipoPersona INTEGER(11),
+		 							IN cNombre		  VARCHAR(150),
+		 							IN cAPaterno   	  VARCHAR(150),
+		 							IN cAMaterno  	  VARCHAR(150),
+		 							IN lGenero		  TINYINT(1),
+		 							IN dtFechaNac	  VARCHAR(50),
+		 							IN cArray         TEXT,
+		 							IN iContador      INTEGER(11),
+		 							INOUT iPersona    INTEGER(11),
+ 									OUT lError        TINYINT(1), 
+ 									OUT cSqlState     VARCHAR(50), 
+ 									OUT cError        VARCHAR(200))
 
  	/*Nombre del Procedimiento*/
  	opInsertaPersona:BEGIN
+
+ 		DECLARE cont INTEGER;
 
 		/*Manejo de Errores*/ 
 		DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -49,9 +59,41 @@
 		
 		START TRANSACTION;
 
-			/* Procedimientos */
+			/*Variables para control de errores inicializadas*/
+			SET lError    = 0;
+			SET cSqlState = "";
+			SET cError    = "";
+			SET cont      = 0;
 
-			
+			CALL insertactPersona(	iIDTipoPersona,
+									cNombre,
+									cAPaterno,
+									cAMaterno,
+									lGenero,
+									dtFechaNac,
+									iPersona,
+									lError,
+									cSqlState,
+									cError);
+
+			IF lError = TRUE AND cError != ""
+				THEN LEAVE opInsertaPersona;
+			END IF;
+
+			call log_msg(concat('Arreglo: ', cArray));
+			CALL insertaopAtributoPersona(	iPersona,
+											cArray,
+											lError,
+											cSqlState,
+											cError);
+
+			/*WHILE cont < iContador DO 
+		       	cArray;
+		        CALL insertaopAtributoPersona();
+		        SET cont = cont + 1; 
+		    END WHILE;*/
+
+
 		COMMIT;
 	END;//	
  /*Reseteo del delimitador*/	

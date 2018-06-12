@@ -13,18 +13,15 @@
  
  /*Delimitador de bloque*/
 
- USE escuelajuana;
-
+ USE escuelast;
+ DROP PROCEDURE IF EXISTS `insertaopAtributoPersona`;
  DELIMITER //
 
- CREATE PROCEDURE insertaopAtributoPersona( IN iAtributo      INTEGER,
- 											IN iIDTipoPersona INTEGER,
- 											IN iPersona 	  INTEGER,
-				 							 IN cValor			VARCHAR(150),
-				 							 IN cObs   			VARCHAR(150),
-		 										OUT lError      TINYINT(1), 
-		 										OUT cSqlState   VARCHAR(50), 
-		 										OUT cError      VARCHAR(200))
+ CREATE PROCEDURE insertaopAtributoPersona(	IN iPersona     INTEGER,
+ 											IN cArray       TEXT,
+		 									OUT lError      TINYINT(1), 
+		 									OUT cSqlState   VARCHAR(50), 
+		 									OUT cError      VARCHAR(200))
 
  	/*Nombre del Procedimiento*/
  	insertaopAtributoPersona:BEGIN
@@ -73,7 +70,7 @@
 
 			/*Se valida que los dato no se encunetre nulos o vacios respecto a la tabla*/
 
-			IF iAtributo = 0 OR iAtributo = NULL
+			/*IF iAtributo = 0 OR iAtributo = NULL
 
 				THEN
 						SET lError = 1;
@@ -107,9 +104,9 @@
 						SET cError = "El Valor del atributo no tiene valor";
 						LEAVE insertaopAtributoPersona;
 
-			END IF;
+			END IF;*/
 
-			INSERT INTO opAtributoPersona(opAtributoPersona.iAtributo,
+			/*INSERT INTO opAtributoPersona(opAtributoPersona.iAtributo,
 										  opAtributoPersona.iIDTipoPersona,
 										  opAtributoPersona.iPersona,
 										  opAtributoPersona.cValor,
@@ -122,7 +119,10 @@
 								    cValor,
 								    cObs,
 								    1,
-								    NOW());
+								    NOW());*/
+
+			INSERT INTO opAtributoPersona VALUES (cArray);
+
 		COMMIT;
 	END;//	
  /*Reseteo del delimitador*/	
