@@ -121,7 +121,14 @@
 								    1,
 								    NOW());*/
 
-			INSERT INTO opAtributoPersona VALUES (cArray);
+			INSERT INTO opAtributoPersona (	opAtributoPersona.iPersona,
+											opAtributoPersona.cObs,
+										  	opAtributoPersona.lActivo,
+										  	opAtributoPersona.dtCreado)  
+									VALUES (	iPersona,
+												cArray,
+												1,
+												NOW());
 
 		COMMIT;
 	END;//	

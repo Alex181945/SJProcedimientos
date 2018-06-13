@@ -80,12 +80,16 @@
 				THEN LEAVE opInsertaPersona;
 			END IF;
 
-			call log_msg(concat('Arreglo: ', cArray));
+			/*call log_msg(concat('Arreglo: ', cArray));*/
 			CALL insertaopAtributoPersona(	iPersona,
 											cArray,
 											lError,
 											cSqlState,
 											cError);
+
+			IF lError = TRUE AND cError != ""
+				THEN LEAVE opInsertaPersona;
+			END IF;
 
 			/*WHILE cont < iContador DO 
 		       	cArray;
