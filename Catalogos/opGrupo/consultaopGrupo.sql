@@ -13,16 +13,16 @@
  
  /*Delimitador de bloque*/
 
- USE escuelajuana;
+ USE escuelast;
+ DROP PROCEDURE IF EXISTS `consultaopGrupo`;
 
  DELIMITER //
 
- CREATE PROCEDURE consultaopGrupo( IN iGrupo       INTEGER,
- 									IN iCarrera   INTEGER,
- 									IN iPeriodo	  INTEGER,
-		 										OUT lError     TINYINT(1), 
-		 										OUT cSqlState  VARCHAR(50), 
-		 										OUT cError     VARCHAR(200))
+ CREATE PROCEDURE consultaopGrupo( 	IN iTipoConsulta INTEGER,
+ 									IN iGrupo        INTEGER,
+		 							OUT lError     TINYINT(1), 
+		 							OUT cSqlState  VARCHAR(50), 
+		 							OUT cError     VARCHAR(200))
 
  	/*Nombre del Procedimiento*/
  	consultaopGrupo:BEGIN
@@ -71,13 +71,11 @@
 			/*Comprueba si existe el Tipo Persona*/
 
 			IF EXISTS(SELECT * FROM opGrupo WHERE opGrupo.iGrupo  = iGrupo
-														AND opGrupo.iCarrera  = iCarrera
-														AND opGrupo.iPeriodo  = iPeriodo)
+												AND opGrupo.lActivo = 1)
 
 			/*Si existe copia toda la informacion del Tipo Persona a la tabla temporal*/
  				THEN INSERT INTO tt_opGrupo SELECT * FROM opGrupo WHERE opGrupo.iGrupo = iGrupo
- 																AND opGrupo.iCarrera  = iCarrera
-																AND opGrupo.iPeriodo  = iPeriodo;
+ 																AND opGrupo.lActivo = 1;
 
 			/*Si no manda error de que no lo encontro*/
  				ELSE 

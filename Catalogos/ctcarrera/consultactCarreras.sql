@@ -13,15 +13,15 @@
  
  /*Delimitador de bloque*/
 
- USE escuelajuana;
+ USE escuelast;
+ DROP PROCEDURE IF EXISTS `consultactCarreras`;
 
  DELIMITER //
 
- CREATE PROCEDURE consultactCarreras( IN iCarrera INTEGER,
- 										IN cCarrera  VARCHAR(100),
-		 										OUT lError     TINYINT(1), 
-		 										OUT cSqlState  VARCHAR(50), 
-		 										OUT cError     VARCHAR(200))
+ CREATE PROCEDURE consultactCarreras( 	IN iTipoConsulta INT(3),
+ 										OUT lError     TINYINT(1), 
+ 									  	OUT cSqlState  VARCHAR(50), 
+		 							  	OUT cError     VARCHAR(200))
 
  	/*Nombre del Procedimiento*/
  	consultactCarreras:BEGIN
@@ -62,40 +62,22 @@
  			 *especificada despues del LIKE
  			 */
 
-			DROP TEMPORARY TABLE IF EXISTS tt_ctCarreras;
+			DROP TEMPORARY TABLE IF EXISTS tt_ctCarrera;
  
- 			CREATE TEMPORARY TABLE tt_ctCarreras LIKE ctCarreras;
+ 			CREATE TEMPORARY TABLE tt_ctCarrera LIKE ctCarrera;
 
  			
-			/*Comprueba si existe el Tipo Persona*/
+			/*Casos para el tipo de consulta*/
+			CASE iTipoConsulta
 
-			IF EXISTS(SELECT * FROM ctCarreras WHERE ctCarreras.iCarrera  = iCarrera
-														AND ctCarreras.cCarrera  = cCarrera)
+			    WHEN 0 THEN INSERT INTO tt_ctCarrera SELECT * FROM ctCarrera WHERE ctCarrera.lActivo = 0;
+			    WHEN 1 THEN INSERT INTO tt_ctCarrera SELECT * FROM ctCarrera WHERE ctCarrera.lActivo = 1;
+			    WHEN 2 THEN INSERT INTO tt_ctCarrera SELECT * FROM ctCarrera;
 
-			/*Si existe copia toda la informacion del Tipo Persona a la tabla temporal*/
- 				THEN INSERT INTO tt_ctCarreras SELECT * FROM ctCarreras WHERE ctCarreras.iCarrera = iCarrera
- 																AND ctCarreras.cCarrera = cCarrera;
-			/*Si no manda error de que no lo encontro*/
- 				ELSE 
- 					SET lError = 1; 
- 					SET cError = "Tipo Carrera no existe";
- 					LEAVE consultactCarreras;	
+			END CASE;
 
- 			 END IF;
-
- 			  			/*Valida que el Tipo Persona este activo*/
- 			IF NOT EXISTS(SELECT * FROM tt_ctCarreras WHERE tt_ctCarreras.lActivo = 1)
-
-
- 			THEN 
- 					SET lError = 1; 
- 					SET cError = "Tipo Materia no activo";
-					LEAVE consultactCarreras;
- 
- 			END IF;
- 
-
- 			SELECT * FROM tt_ctCarreras;
+			/*Resultado de las consultas anteriores*/
+ 			SELECT * FROM tt_ctCarrera;
 
 		COMMIT;
 

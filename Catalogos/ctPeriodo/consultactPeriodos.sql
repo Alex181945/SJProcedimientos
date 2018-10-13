@@ -13,15 +13,16 @@
  
  /*Delimitador de bloque*/
 
- USE escuelajuana;
+ USE escuelast;
+ DROP PROCEDURE IF EXISTS `consultactPeriodos`;
 
  DELIMITER //
 
- CREATE PROCEDURE consultactPeriodos( IN iPeriodo  INTEGER,
- 										IN cPeriodo  VARCHAR(100),
-		 										OUT lError     TINYINT(1), 
-		 										OUT cSqlState  VARCHAR(50), 
-		 										OUT cError     VARCHAR(200))
+ CREATE PROCEDURE consultactPeriodos( 	IN iTipoConsulta INT(3),
+ 										IN iCarrera INT(3),
+		 								OUT lError     TINYINT(1), 
+		 								OUT cSqlState  VARCHAR(50), 
+		 								OUT cError     VARCHAR(200))
 
  	/*Nombre del Procedimiento*/
  	consultactPeriodos:BEGIN
@@ -62,41 +63,22 @@
  			 *especificada despues del LIKE
  			 */
 
-			DROP TEMPORARY TABLE IF EXISTS tt_ctPeriodos;
+			DROP TEMPORARY TABLE IF EXISTS tt_ctPeriodo;
  
- 			CREATE TEMPORARY TABLE tt_ctPeriodos LIKE ctPeriodos;
+ 			CREATE TEMPORARY TABLE tt_ctPeriodo LIKE ctPeriodo;
 
  			
-			/*Comprueba si existe el Tipo Persona*/
+			/*Casos para el tipo de consulta*/
+			CASE iTipoConsulta
 
-			IF EXISTS(SELECT * FROM ctPeriodos WHERE ctPeriodos.iPeriodo  = iPeriodo
-														AND ctPeriodos.cPeriodo  = cPeriodo)
+			    WHEN 0 THEN INSERT INTO tt_ctPeriodo SELECT * FROM ctPeriodo WHERE ctPeriodo.iCarrera = iCarrera AND ctPeriodo.lActivo = 0;
+			    WHEN 1 THEN INSERT INTO tt_ctPeriodo SELECT * FROM ctPeriodo WHERE ctPeriodo.iCarrera = iCarrera AND ctPeriodo.lActivo = 1;
+			    WHEN 2 THEN INSERT INTO tt_ctPeriodo SELECT * FROM ctPeriodo WHERE ctPeriodo.iCarrera = iCarrera;
 
-			/*Si existe copia toda la informacion del Tipo Persona a la tabla temporal*/
- 				THEN INSERT INTO tt_ctPeriodos SELECT * FROM ctPeriodos WHERE ctPeriodos.iPeriodo = iPeriodo
- 																AND ctPeriodos.cPeriodo  = cPeriodo;
+			END CASE;
 
-			/*Si no manda error de que no lo encontro*/
- 				ELSE 
- 					SET lError = 1; 
- 					SET cError = "Tipo Grupo no existe";
- 					LEAVE consultactPeriodos;	
-
- 			 END IF;
-
- 			  			/*Valida que el Tipo Persona este activo*/
- 			IF NOT EXISTS(SELECT * FROM tt_ctPeriodos WHERE tt_ctPeriodos.lActivo = 1)
-
-
- 			THEN 
- 					SET lError = 1; 
- 					SET cError = "Tipo Grupo no activo";
-					LEAVE consultactPeriodos;
- 
- 			END IF;
- 
-
- 			SELECT * FROM tt_ctPeriodos;
+			/*Resultado de las consultas anteriores*/
+ 			SELECT * FROM tt_ctPeriodo;
 
 		COMMIT;
 
